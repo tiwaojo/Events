@@ -1,35 +1,74 @@
-library tasks.globals;
+library globals;
 
+//export 'src/ScrollingYears.dart';
+//export 'src/main.dart';
+//export 'package:events/src/viewDayEvents.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+export 'package:flutter/material.dart';
+export 'package:intl/date_symbol_data_local.dart';
+export 'package:provider/provider.dart';
+export 'package:shared_preferences/shared_preferences.dart';
+export 'package:table_calendar/table_calendar.dart';
+
+final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 Animation<double> animation;
 AnimationController animationController1, animationController2;
 String currentMonth = DateFormat.MMMM().format(DateTime.now());
-DateTime targetDateTime = DateTime(2020, 6, 8);
-DateTime currentDate = DateTime(2020, 6, 7);
-DateTime selectedDate = DateTime.now();
+//DateTime eventDateTime = DateTime.now().add(Duration(days: 1));//DateTime(2020, 6, 8);
+//DateTime targetDateTime = DateTime(2020, 6, 8);
+DateTime currentDate = DateTime.now();
+DateTime startDate = currentDate;
+DateTime endDate = currentDate.add(Duration(days: 1));
 
 bool modalOpen = false;
 bool resized = true;
-//double infinHeight=double.infinity;
-//bool visibility = false;
-//double opacity = 0.0;
 int switchWidget = 1;
 var scale = animationController2;
 bool menuGradient = false;
 
-String nextMonth = DateFormat.MMMM()
-    .format(DateTime(targetDateTime.year, targetDateTime.month + 1));
-String prevMonth = DateFormat.MMMM()
-    .format(DateTime(targetDateTime.year, targetDateTime.month - 1));
-var alignment = Alignment.center;
+//void showToast(BuildContext context) {
+//  final scaffold = Scaffold.of(context);
+//  scaffold.showSnackBar(
+//    SnackBar(
+//      content: Text(
+//          'Event not added./n Event can not end before it has started.'),
+//      duration: Duration(seconds: 3),
+//      action: SnackBarAction(
+//          label: "Undo", onPressed: null),
+//    ),
+//  );
+//}
+
+//double infinHeight=double.infinity;
+//bool visibility = false;
+//double opacity = 0.0;
+
+//String nextMonth = DateFormat.MMMM()
+//    .format(DateTime(targetDateTime.year, targetDateTime.month + 1));
+//String prevMonth = DateFormat.MMMM()
+//    .format(DateTime(targetDateTime.year, targetDateTime.month - 1));
+
+//void _showToast(BuildContext context) {
+//    final scaffold = Scaffold.of(context);
+//    scaffold.showSnackBar(
+//        SnackBar(
+//          content: Text(
+//              'Event not added./n Event can not end before it has started.'),
+//          duration: Duration(seconds: 3),
+//          action: SnackBarAction(
+//              label: "Undo", onPressed: null),
+//        ),
+//    );
+//}
 
 CalendarController calendarController;
 Map<DateTime, List<dynamic>> dayEvents;
-TextEditingController eventTitleController;
+TextEditingController eTitleController;
+TextEditingController eDescrptionController;
 //a list of the dayEvents
 List<dynamic> selectedEvents;
 SharedPreferences eventPrefs;
@@ -49,3 +88,5 @@ Map<DateTime, dynamic> decodeMap(Map<String, dynamic> map) {
   });
   return newMap;
 }
+
+class Event {}

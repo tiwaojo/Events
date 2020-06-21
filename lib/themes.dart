@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:events/globals.dart';
 
 final ThemeData light = ThemeData(
   textTheme: TextTheme(
@@ -10,8 +9,8 @@ final ThemeData light = ThemeData(
     ),
     headline2: TextStyle(
       fontFamily: "Phenomena",
-      fontSize: 24,
-      color: Color(0xFFFF3366).withOpacity(.4),
+      fontSize: 16,
+      color: Color(0xFFFF3366),
     ),
   ),
   scaffoldBackgroundColor: Color(0xFF4a6a97),
@@ -24,6 +23,20 @@ final ThemeData dark = ThemeData(
       fontSize: 30,
       color: Color(0xFFFF3366),
     ),
+    headline2: TextStyle(
+      fontFamily: "Phenomena",
+      fontSize: 16,
+      color: Color(0xFFFF3366),
+    ),
+  ),
+  inputDecorationTheme: InputDecorationTheme(
+    fillColor: Color(0xff182231),
+    contentPadding: EdgeInsets.only(left: 10),
+    focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.pink),
+        borderRadius: BorderRadius.circular(10),
+        gapPadding: 10),
+    alignLabelWithHint: true,
   ),
   scaffoldBackgroundColor: Color(0xff182231),
   primaryColor: Color(0xff182231),
@@ -38,11 +51,13 @@ class ThemeNotifier extends ChangeNotifier {
 
   ThemeNotifier() {
     _darkTheme = true;
+
     _loadFromPrefs();
   }
 
   toggleTheme() {
     _darkTheme = !_darkTheme;
+//    globals.menuGradient=_darkTheme;
     _saveToPrefs();
     notifyListeners();
   }
@@ -56,6 +71,7 @@ class ThemeNotifier extends ChangeNotifier {
   _loadFromPrefs() async {
     await _initPrefs();
     _darkTheme = prefs.getBool(key) ?? true;
+    menuGradient = _darkTheme;
     notifyListeners();
   }
 

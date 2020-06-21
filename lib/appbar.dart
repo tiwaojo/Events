@@ -1,9 +1,8 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
+import 'package:events/globals.dart';
 
-import 'bottom_sheet.dart';
-import 'globals.dart' as globals;
+import 'custom_widgets.dart';
 
 class Appbar extends StatefulWidget {
   @override
@@ -38,7 +37,7 @@ class _AppbarState extends State<Appbar> {
 //                        Transform.scale(scale: 0.5, child: _myBody);
 
                       setState(() {
-                        globals.resized = !globals.resized;
+                        resized = !resized;
                       });
                     }),
               ),
@@ -49,7 +48,7 @@ class _AppbarState extends State<Appbar> {
             color: Colors.pink,
             iconSize: 30,
             onPressed: () {
-              if (globals.modalOpen == false) {
+              if (modalOpen == false) {
 //                            modalOpen=true;
                 showModalBottomSheet(
                   context: context,

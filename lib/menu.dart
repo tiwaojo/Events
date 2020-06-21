@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
-import 'globals.dart' as globals;
+//import 'package:events_globals/events_globals.dart';
+import 'package:events/globals.dart';
 
 class Menu extends StatefulWidget {
   @override
@@ -14,7 +12,7 @@ class _MenuState extends State<Menu> {
     return AnimatedOpacity(
 //          key: ValueKey(2),
       //if menu is collapsed(resized) opacity is 0 otherwise it is 1
-      opacity: globals.resized ? 0 : 1,
+      opacity: resized ? 0 : 1,
       duration: Duration(seconds: 1),
       curve: Curves.easeIn,
 

@@ -1,14 +1,10 @@
-//import 'package:animate_do/animate_do.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:events/viewDayEvents.dart';
-import 'package:flutter/gestures.dart';
+import 'package:events/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:table_calendar/table_calendar.dart';
 
-import 'globals.dart';
-import 'globals.dart' as globals;
+import 'custom_widgets.dart';
 
 class MyBody extends StatefulWidget {
 //  MyBody({Key key}):super(key:key);
@@ -39,7 +35,7 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
         SizedBox(
           height: 50,
         ),
-        ...globals.selectedEvents.map((events) {
+        ...selectedEvents.map((events) {
           return FadeIn(
             animate: true,
             delay: Duration(milliseconds: 1500),
@@ -53,10 +49,10 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
                   color: Colors.pinkAccent,
                   onPressed: () {
                     setState(() {
-                      globals.dayEvents.remove(0);
+                      dayEvents.remove(0);
                       selectedEvents.removeLast();
                       print(selectedEvents);
-                      print(globals.dayEvents);
+                      print(dayEvents);
                     });
                   },
                 ),
@@ -132,9 +128,9 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
         ),
 //        Icon(Icons.expand_more,size: 48,color: Colors.amber,),
         TableCalendar(
-          calendarController: globals.calendarController,
+          calendarController: calendarController,
           initialCalendarFormat: CalendarFormat.month,
-          events: globals.dayEvents,
+          events: dayEvents,
           availableGestures: AvailableGestures.verticalSwipe,
           availableCalendarFormats: {CalendarFormat.month: 'Month'},
           headerVisible: true,
@@ -182,7 +178,7 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
           onDaySelected: (day, events) {
             setState(() {
 //               if( globals.dayEvents.length>=1){globals.selectedEvents=events;}else{}
-              globals.selectedEvents = events;
+              selectedEvents = events;
 //                if(globals.dayEvents.length<=1){
 //                  Container(child: Center(child: Text("No Events on",style: TextStyle(fontFamily: "Phenomena",fontSize: 50,color: Color(0xFFC8C8C8).withOpacity(0.5),),)),);
             });
@@ -196,8 +192,8 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
                 children: <Widget>[
                   Container(
                     alignment: Alignment.center,
-                    height: 32,
-                    width: 32,
+//                    height: 32,
+//                    width: 32,
 //                        padding: EdgeInsets.all(6),
                     margin: EdgeInsets.all(12),
                     decoration: BoxDecoration(
@@ -217,7 +213,7 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
                       ],
                     ),
                     child: Text(
-                      date.day.toString(),
+                      date.day.toString(), softWrap: true,
                       style: TextStyle(
                           fontFamily: "Phenomena",
                           fontSize: 18,

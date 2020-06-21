@@ -1,8 +1,7 @@
-import 'package:events/themes.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+//import 'package:events_globals/events_globals.dart';
+import 'package:events/globals.dart';
 
-import 'globals.dart' as globals;
+import 'custom_widgets.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -23,7 +22,7 @@ class _SettingsState extends State<Settings> {
               title: Text(notifier.darkTheme ? "DarkTheme" : "Light THeme"),
               onChanged: (bool value) {
                 notifier.toggleTheme();
-                globals.menuGradient = !globals.menuGradient;
+                menuGradient = !menuGradient;
                 setState(() {
 //                          notifier.toggleTheme();
 
