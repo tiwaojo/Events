@@ -15,82 +15,63 @@ class MyBody extends StatefulWidget {
 
 //CalendarCarousel _calendarCarousel;
 
-class CurrentEvent {
-  CurrentEvent({this.isExpanded: false, this.header, this.body});
-
-  bool isExpanded;
-  String header;
-  String body;
-}
+//class CurrentEvent {
+//  CurrentEvent({this.isExpanded: false, this.header, this.body});
+//
+//  bool isExpanded;
+//  String header;
+//  String body;
+//}
 
 class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
-  printEvents() {}
+//  printEvents() {}
 
   @override
   Widget build(BuildContext context) {
+//    Widget _myDayEvents = displayEvents(context);
     return Column(
       mainAxisSize: MainAxisSize.max,
 //        mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        SizedBox(
-          height: 50,
+        AnimatedSwitcher(
+          duration: Duration(seconds: 2),
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            final offsetAnimation =
+                Tween<Offset>(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0))
+                    .animate(animation);
+            return SlideTransition(
+              position: offsetAnimation,
+              child: FadeTransition(opacity: animation, child: child),
+            );
+          },
+          layoutBuilder: (currentChild, previousChildren) {
+            return currentChild;
+          },
+          switchInCurve: Curves.easeInOut,
+          switchOutCurve: Curves.easeInOut,
+          child: (selectedDayEvents.isNotEmpty)
+              ? displayRangedEvents(context)
+              : displayEvents(context),
         ),
-        ...selectedEvents.map((events) {
-          return FadeIn(
-            animate: true,
-            delay: Duration(milliseconds: 1500),
-            duration: Duration(seconds: 2),
-            child: Card(
-              elevation: 8,
-              child: ListTile(
-                title: Text(events),
-                trailing: IconButton(
-                  icon: Icon(MdiIcons.delete),
-                  color: Colors.pinkAccent,
-                  onPressed: () {
-                    setState(() {
-                      dayEvents.remove(0);
-                      selectedEvents.removeLast();
-                      print(selectedEvents);
-                      print(dayEvents);
-                    });
-                  },
-                ),
-              ),
-            ),
-          );
-//             if(globals.dayEvents.length<=1) { Container(child: Center(child: Text("No Events on",style: TextStyle(fontFamily: "Phenomena",fontSize: 50,color: Color(0xFFC8C8C8).withOpacity(0.5),),)),);}
-        }),
-//    (() {
-//     if(globals.dayEvents.length>=1) {printEvents();}else {}
-//    }()),
+
         SizedBox(
           height: 20,
         ),
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => viewDayEvents(context),
-              ),
-            );
-          },
-          child: Bounce(
-            child: IconButton(
-              alignment: Alignment.center,
-              icon: Icon(
-                Icons.expand_more,
-                size: 48,
-                color: Colors.amber,
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => viewDayEvents(context),
-                  ),
-                );
+        Bounce(
+          child: IconButton(
+            alignment: Alignment.center,
+            icon: Icon(
+              Icons.expand_more,
+              size: 48,
+              color: Colors.amber,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ViewDayEvents()
+//                      viewDayEvents(context),
+                    ),
+              );
 //                  setState(() {
 //                    Hero(
 //                      tag: "dayEvents",
@@ -117,14 +98,13 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
 //                      ),
 //                      );
 //                  });
-              },
-            ),
-            infinite: true,
-            duration: Duration(seconds: 2),
-            delay: Duration(seconds: 1),
-            animate: true,
-            from: 10,
+            },
           ),
+          infinite: true,
+          duration: Duration(seconds: 2),
+          delay: Duration(seconds: 1),
+          animate: true,
+          from: 10,
         ),
 //        Icon(Icons.expand_more,size: 48,color: Colors.amber,),
         TableCalendar(
@@ -178,9 +158,58 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
           onDaySelected: (day, events) {
             setState(() {
 //               if( globals.dayEvents.length>=1){globals.selectedEvents=events;}else{}
-              selectedEvents = events;
+              selectedDayEvents = events;
+
+//              print(selectedDayEvents);
+//              Map<String, dynamic> displayEvent ;//= NewEvent();
+//              displayEvent=events as NewEvent;
+//              print(displayEvent.title);
+//              selectedDayEvents.map((even) {
+//                displayEvent = events[0];
+//              print(events);
+              // TODO encode to string and cast as NewEvent
+//              print(selectedDayEvents);
+//              print(events);
+//              String obj=selectedDayEvents[0];
+//              selectedDayEvents.forEach((element) {NewEvent obj=NewEvent.fromJson(jsonDecode(element));
+//              print(obj.toJson());
+//              });
+//              var user = NewEvent.fromJson(events[0]);
+//            var user=  json.decode(jsonDecode(selectedDayEvents[0]));
+//              print(user.toJson());
+//              print(user.title);
+//              print(user.startDate);
+//              print(user.endDate);
+//              print(user.description);
+//              String myCode=jsonEncode(encodeMap((events[0])));
+//
+//              print(dayEvents.forEach((key, value) { }));
+//              String userMap = jsonEncode(selectedDayEvents[0]);
+//              var user = NewEvent.fromJson(selectedDayEvents[0]);
+//print(user.title);
+//print(user.startDate);
+//print(user.endDate);
+//print(user.description);
+
+//displayEvent=jsonDecode(selectedDayEvents[0]);
+
+//                print(displayEvent);
+//              });
+//            for(int i=selectedDayEvents.length;i>=0;i--){
+//              print(selectedDayEvents[0]);
+//            }
+
+//            print(selectedDayEvents[1]);
+//              selectedDayEvents.forEach((value) {print(value);});
+//              print(selectedDayEvents[0].toString());
+//              print(dayEvents.values.elementAt(calendarController.selectedDay));
+//              print(dayEvents["2020-06-22 16:45:52.999476"]);
+//              print(dayEvents[calendarController.selectedDay]);
+//              for(var entry in dayEvents.entries){print(entry.value);}
+
+//              var list=dayEvents.values.toList();
+//              print(list[0]);
 //                if(globals.dayEvents.length<=1){
-//                  Container(child: Center(child: Text("No Events on",style: TextStyle(fontFamily: "Phenomena",fontSize: 50,color: Color(0xFFC8C8C8).withOpacity(0.5),),)),);
             });
           },
           builders: CalendarBuilders(
@@ -213,7 +242,8 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
                       ],
                     ),
                     child: Text(
-                      date.day.toString(), softWrap: true,
+                      date.day.toString(),
+                      softWrap: true,
                       style: TextStyle(
                           fontFamily: "Phenomena",
                           fontSize: 18,
@@ -258,6 +288,148 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
         ),
       ],
     );
+  }
+
+  Widget displayEvents(context) {
+    return Container(height: MediaQuery
+        .of(context)
+        .size
+        .height * 0.26,
+      child: Center(
+          child: Text(
+            "No Events on ",
+            style: TextStyle(
+              fontFamily: "Phenomena",
+              fontSize: 50,
+              color: Color(0xFFC8C8C8).withOpacity(0.5),
+            ),
+          )),
+    );
+  }
+
+  Widget displayRangedEvents(context) {
+//    selectedDayEvents.map((event) {
+//      var user = NewEvent.fromJson(event);
+//
+////            var user=  json.decode(jsonDecode(selectedDayEvents[0]));
+//      print(user.toJson());
+//      print(user.title);
+    return Column(
+      children: <Widget>[
+        ...selectedDayEvents.getRange(
+            0, selectedDayEvents.length >= 3 ? 3 : selectedDayEvents.length)
+            .map(
+              (event) {
+            var user = NewEvent.fromJson(event);
+            print(user.toJson());
+            return Hero(
+              tag: user.title,
+              child: FadeIn(
+                animate: true,
+//                delay: Duration(milliseconds: 1500),
+                duration: Duration(seconds: 2),
+                child: Card(
+                  elevation: 5, shadowColor: Colors.black, color: Theme
+                    .of(context)
+                    .primaryColor,
+                  child: ListTile(
+                    title: Text(user.title, style: Theme
+                        .of(context)
+                        .textTheme
+                        .headline2,),
+                    trailing: IconButton(
+                      icon: Icon(MdiIcons.delete),
+                      color: Colors.pinkAccent,
+                      onPressed: () {
+                        setState(() {
+                          dayEvents.remove(0);
+                          selectedDayEvents.removeLast();
+                          print(selectedDayEvents);
+                          print(dayEvents);
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+
+//      return LimitedBox(maxHeight: 200,maxWidth: MediaQuery.of(context).size.width,
+//        child: Hero(tag: "events",
+//          child: ListView.builder(itemCount: selectedDayEvents.length>=3?3:selectedDayEvents.length,itemBuilder: (context, index) {
+//
+//
+//              var user = NewEvent.fromJson(selectedDayEvents[index]);
+//
+//  print(user.toJson());
+//  print(user.title);
+////  selectedDayEvents.forEach((element) {print(element);});
+//
+//            return FadeIn(
+//              animate: true,
+//          delay: Duration(milliseconds: 1500),
+//          duration: Duration(seconds: 2),
+//              child: Card(elevation:2 ,color: Colors.blueGrey,shadowColor: Colors.green,
+//                child: ExpansionTile(
+//
+//                  title: Text(user.title),
+//                  subtitle: Text(user.startDate),
+//                ),
+//              ),
+//            );
+//          },),
+//        ),
+//      );
+//setState(() {
+//  selectedDayEvents.forEach((element) {
+//    var user = NewEvent.fromJson(element);
+//    print(user.toJson());});
+//  selectedDayEvents.map((events) {
+////          print(selectedDayEvents);
+////          var user = NewEvent.fromJson(events);
+////          print(user.title);
+////          print(user.startDate);
+////          print(user.endDate);
+////          print(user.description);
+//
+//    var user = NewEvent.fromJson(events);
+////            var user=  json.decode(jsonDecode(selectedDayEvents[0]));
+////    print(user.toJson());
+////    print(user.title);
+//    setState(() {
+//      return FadeIn(
+//        animate: true,
+//        delay: Duration(milliseconds: 1500),
+//        duration: Duration(seconds: 2),
+//        child: Hero(tag: "events",
+//          child: Card(
+//            elevation: 8,
+//            child: ListTile(
+//              title: Text(user.title),
+//              trailing: IconButton(
+//                icon: Icon(MdiIcons.delete),
+//                color: Colors.pinkAccent,
+//                onPressed: () {
+//                  setState(() {
+//                    dayEvents.remove(0);
+//                    selectedDayEvents.removeLast();
+//                    print(selectedDayEvents);
+//                    print(dayEvents);
+//                  });
+//                },
+//              ),
+//            ),
+//          ),
+//        ),
+//      );
+////    });
+//
+//  });
+//});
   }
 }
 
@@ -714,3 +886,7 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
 //      ),
 //    ),
 //  );
+// if(globals.dayEvents.length<=1) { Container(child: Center(child: Text("No Events on",style: TextStyle(fontFamily: "Phenomena",fontSize: 50,color: Color(0xFFC8C8C8).withOpacity(0.5),),)),);}
+//    (() {
+//     if(globals.dayEvents.length>=1) {printEvents();}else {}
+//    }()),

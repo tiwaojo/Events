@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:events/globals.dart';
 
@@ -72,7 +71,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         break;
       case 2:
         {
-          return viewDayEvents(context);
+          return ViewDayEvents();
+//            viewDayEvents(context);
         }
         break;
       case 3:
@@ -92,12 +92,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   void initState() {
     //
     super.initState();
-    eTitleController = TextEditingController();
+//    eTitleController = TextEditingController();
     calendarController = CalendarController();
     dayEvents = {};
-    selectedEvents = [];
-
+    selectedDayEvents = [];
     initPrefs();
+
     switchPage();
 //    _retrieveCalendars();
 
@@ -129,12 +129,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     _pageController.dispose();
   }
 
-  @override
-  void deactivate() {
-    //
-    super.deactivate();
-  }
-
+//  @override
+//  void deactivate() {
+//    //
+//    super.deactivate();
+//  }
   void initPrefs() async {
     eventPrefs = await SharedPreferences.getInstance();
     setState(() {
@@ -143,8 +142,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
+//    appbar(context);
 //    Size size =MediaQuery.of(context).size;
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
@@ -156,7 +157,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       pageSnapping: true,
       children: <Widget>[
         body(context),
-        viewDayEvents(context),
+//        viewDayEvents(context),
+        ViewDayEvents(),
       ],
     );
     return Scaffold(
@@ -192,75 +194,75 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     );
   }
 
-  Widget appbar(context) {
-    return Container(
-
-      margin: EdgeInsets.only(top: 20),
-      width: MediaQuery.of(context).size.width,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Transform(
-            transform: Matrix4.rotationX(pi),
-            alignment: Alignment.center,
-            child: Transform.rotate(
-              angle: pi / 2,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: IconButton(
-//                                                  icon: Icon(MdiIcons.equalizerOutline),
-                    icon: Icon(IconData(0xe800, fontFamily: "appicons")),
-                    color: Colors.pink,
-                    splashColor: Colors.blue,
-                    hoverColor: Colors.green,
-                    onPressed: () {
-                      setState(
-                              () {
-                            resized = !resized;
-                          });
-                    }),
-              ),
-            ),
-          ),
-          IconButton(
-            icon: Icon(Icons.add),
-            color: Colors.pink,
-            iconSize: 30,
-            onPressed: () {
-              if (modalOpen == false) {
-                modalOpen = true;
-                showModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return SingleChildScrollView(
-                      child: ModalBottomSheet(),
-                    );
-                  },
-                  backgroundColor: Colors.blueGrey,
-                  enableDrag: true,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(25.0),
-                    ),
-                  ),
-                  isScrollControlled: true,
-                  useRootNavigator: true,
-                  isDismissible: true,
-                );
-              }
-              if (modalOpen == true) {
-                modalOpen = false;
-                setState(() {
-                  eTitleController.clear();
-                });
-              }
-            },
-          ),
-        ],
-      ),
-    );
-  }
+//  Widget appbar(context) {
+//    return Container(
+//
+//      margin: EdgeInsets.only(top: 20),
+//      width: MediaQuery.of(context).size.width,
+//      child: Row(
+//        crossAxisAlignment: CrossAxisAlignment.center,
+//        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//        children: <Widget>[
+//          Transform(
+//            transform: Matrix4.rotationX(pi),
+//            alignment: Alignment.center,
+//            child: Transform.rotate(
+//              angle: pi / 2,
+//              child: Padding(
+//                padding: const EdgeInsets.all(8.0),
+//                child: IconButton(
+////                                                  icon: Icon(MdiIcons.equalizerOutline),
+//                    icon: Icon(IconData(0xe800, fontFamily: "appicons")),
+//                    color: Colors.pink,
+//                    splashColor: Colors.blue,
+//                    hoverColor: Colors.green,
+//                    onPressed: () {
+//                      setState(
+//                              () {
+//                            resized = !resized;
+//                          });
+//                    }),
+//              ),
+//            ),
+//          ),
+//          IconButton(
+//            icon: Icon(Icons.add),
+//            color: Colors.pink,
+//            iconSize: 30,
+//            onPressed: () {
+//              if (modalOpen == false) {
+//                modalOpen = true;
+//                showModalBottomSheet(
+//                  context: context,
+//                  builder: (context) {
+//                    return SingleChildScrollView(
+//                      child: ModalBottomSheet(),
+//                    );
+//                  },
+//                  backgroundColor: Colors.blueGrey,
+//                  enableDrag: true,
+//                  shape: RoundedRectangleBorder(
+//                    borderRadius: BorderRadius.vertical(
+//                      top: Radius.circular(25.0),
+//                    ),
+//                  ),
+//                  isScrollControlled: true,
+//                  useRootNavigator: true,
+//                  isDismissible: true,
+//                );
+//              }
+//              if (modalOpen == true) {
+//                modalOpen = false;
+////                setState(() {
+////                  eTitleController.clear();
+////                });
+//              }
+//            },
+//          ),
+//        ],
+//      ),
+//    );
+//  }
 
   Widget menu(context) {
     return AnimatedOpacity(
@@ -386,7 +388,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              appbar(context),
+//              appbar(context),
+
+              Appbar(context),
               AnimatedSwitcher(
                 transitionBuilder: (Widget child, Animation<double> animation) {
                   final offsetAnimation =

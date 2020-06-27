@@ -3,6 +3,8 @@ library globals;
 //export 'src/ScrollingYears.dart';
 //export 'src/main.dart';
 //export 'package:events/src/viewDayEvents.dart';
+//import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,8 +23,8 @@ String currentMonth = DateFormat.MMMM().format(DateTime.now());
 //DateTime eventDateTime = DateTime.now().add(Duration(days: 1));//DateTime(2020, 6, 8);
 //DateTime targetDateTime = DateTime(2020, 6, 8);
 DateTime currentDate = DateTime.now();
-DateTime startDate = currentDate;
-DateTime endDate = currentDate.add(Duration(days: 1));
+DateTime startDate = DateTime.now();
+DateTime endDate = DateTime.now().add(Duration(days: 1));
 
 bool modalOpen = false;
 bool resized = true;
@@ -70,13 +72,15 @@ Map<DateTime, List<dynamic>> dayEvents;
 TextEditingController eTitleController;
 TextEditingController eDescrptionController;
 //a list of the dayEvents
-List<dynamic> selectedEvents;
+List<dynamic> selectedDayEvents;
+//List<NewEvent> someEventList;
 SharedPreferences eventPrefs;
 
 Map<String, dynamic> encodeMap(Map<DateTime, dynamic> map) {
   Map<String, dynamic> newMap = {};
   map.forEach((key, value) {
     newMap[key.toString()] = map[key];
+//    newMap[value.toString()] = map[value];
   });
   return newMap;
 }
@@ -89,4 +93,37 @@ Map<DateTime, dynamic> decodeMap(Map<String, dynamic> map) {
   return newMap;
 }
 
-class Event {}
+class NewEvent {
+  String title;
+  String startDate = DateTime.now().toString();
+  String endDate = DateTime.now().add(Duration(days: 1)).toString();
+  String description;
+
+  //if using {this.description} instead of [this.description], to assign a value use paramName:Value (e.g. var customer = Customer("bezkoder", location: "US", age: 26);
+  NewEvent([this.title, this.startDate, this.endDate, this.description]);
+
+  Map<String, dynamic> toJson() => {
+//   Map startDate = this.startDate != null ? this.startDate.toJson() : null;
+
+//    return {
+        "title": title,
+        "startDate": startDate,
+        "endDate": endDate,
+        "description": description,
+//    };
+      };
+
+//  Map fromJson(Map<String, dynamic> json)=>{
+//title = json['title'],
+//        startDate = json['startDate'],
+//        endDate = json['endDate'],
+//        description = json['description'];
+//  }
+  factory NewEvent.fromJson(json) {
+    return NewEvent(
+        json['title'], json['startDate'], json['endDate'], json['description']);
+  }
+//  NewEvent.withoutDescription(this.title,this.startDate,this.endDate){
+//    this.startDate = currentDate;
+//    this.endDate = currentDate.add(Duration(days: 1));
+}
