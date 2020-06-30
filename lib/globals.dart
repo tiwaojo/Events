@@ -25,7 +25,7 @@ String currentMonth = DateFormat.MMMM().format(DateTime.now());
 DateTime currentDate = DateTime.now();
 DateTime startDate = DateTime.now();
 DateTime endDate = DateTime.now().add(Duration(days: 1));
-
+TableCalendar tableCalendar;
 bool modalOpen = false;
 bool resized = true;
 int switchWidget = 1;
@@ -66,6 +66,11 @@ bool menuGradient = false;
 //        ),
 //    );
 //}
+
+final eventListKey = GlobalKey<AnimatedListState>();
+
+//final eventDisplayWidget=GlobalKey<AnimatedSwi>();
+var eventIndex; //=selectedDayEvents.length >= 3 ? 3 : selectedDayEvents.length;
 
 CalendarController calendarController;
 Map<DateTime, List<dynamic>> dayEvents;
@@ -119,7 +124,7 @@ class NewEvent {
 //        endDate = json['endDate'],
 //        description = json['description'];
 //  }
-  factory NewEvent.fromJson(json) {
+  factory NewEvent.fromJson(dynamic json) {
     return NewEvent(
         json['title'], json['startDate'], json['endDate'], json['description']);
   }

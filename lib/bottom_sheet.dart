@@ -456,11 +456,17 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
 
                       }
 
-                      eventPrefs.setString("events", json.encode(encodeMap(
-                          dayEvents)));
+                      eventPrefs.setString(
+                          "events", json.encode(encodeMap(dayEvents)));
+//                      eventListKey.currentState.insertItem(selectedDayEvents.length+1);
+                      if (calendarController.isSelected(startDate)) {
+                        eventListKey.currentState
+                            .insertItem(selectedDayEvents.length + 1);
+                      }
+
                       eTitleController.clear();
                       eDescrptionController.clear();
-                      _dayEvent = null;
+//                      _dayEvent = null;
                       Navigator.pop(context);
                       scaffoldKey.currentState.showSnackBar(
                         SnackBar(

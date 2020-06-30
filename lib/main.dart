@@ -123,10 +123,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   void dispose() {
     //
     super.dispose();
-    calendarController.dispose();
+
     animationController2.dispose();
     animationController1.dispose();
     _pageController.dispose();
+    calendarController.dispose();
   }
 
 //  @override

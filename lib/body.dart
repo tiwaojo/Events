@@ -11,6 +11,7 @@ class MyBody extends StatefulWidget {
 
   @override
   _MyBodyState createState() => _MyBodyState();
+//  GlobalKey eventDisplayWidgetKey= new GlobalKey();
 }
 
 //CalendarCarousel _calendarCarousel;
@@ -28,138 +29,66 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-//    Widget _myDayEvents = displayEvents(context);
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-//        mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        AnimatedSwitcher(
-          duration: Duration(seconds: 2),
-          transitionBuilder: (Widget child, Animation<double> animation) {
-            final offsetAnimation =
-                Tween<Offset>(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0))
-                    .animate(animation);
-            return SlideTransition(
-              position: offsetAnimation,
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          layoutBuilder: (currentChild, previousChildren) {
-            return currentChild;
-          },
-          switchInCurve: Curves.easeInOut,
-          switchOutCurve: Curves.easeInOut,
-          child: (selectedDayEvents.isNotEmpty)
-              ? displayRangedEvents(context)
-              : displayEvents(context),
-        ),
-
-        SizedBox(
-          height: 20,
-        ),
-        Bounce(
-          child: IconButton(
-            alignment: Alignment.center,
-            icon: Icon(
-              Icons.expand_more,
-              size: 48,
-              color: Colors.amber,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ViewDayEvents()
-//                      viewDayEvents(context),
-                    ),
-              );
-//                  setState(() {
-//                    Hero(
-//                      tag: "dayEvents",
-//                      transitionOnUserGestures: true,
-//                      child:
-//                        GestureDetector(
-//                          onTap: () {
-//                            Navigator.push(
-//                                context,
-//                                MaterialPageRoute(
-//                                    builder: (context) => ViewDayEvents(),),);
-//                          }
-//                        child: Padding(
-//                          padding: const EdgeInsets.only(left: 10.0),
-//                          child: Text(
-//                            globals.currentMonth,
-//                            style: TextStyle(
-//                                fontFamily: "Phenomena",
-//                                fontWeight: FontWeight.bold,
-//                                fontSize: 24.0,
-//                                color: CSSColors.deepPink),
-//                          ),
-//                        ),
-//                      ),
-//                      );
-//                  });
-            },
-          ),
-          infinite: true,
-          duration: Duration(seconds: 2),
-          delay: Duration(seconds: 1),
-          animate: true,
-          from: 10,
-        ),
-//        Icon(Icons.expand_more,size: 48,color: Colors.amber,),
-        TableCalendar(
-          calendarController: calendarController,
-          initialCalendarFormat: CalendarFormat.month,
-          events: dayEvents,
-          availableGestures: AvailableGestures.verticalSwipe,
-          availableCalendarFormats: {CalendarFormat.month: 'Month'},
-          headerVisible: true,
-          calendarStyle: CalendarStyle(
-            weekdayStyle: TextStyle(
-                fontFamily: "Phenomena", fontSize: 16, color: Colors.pink),
-            weekendStyle: TextStyle(
-                fontFamily: "Phenomena",
-                fontSize: 16,
-                color: Color(0xFFC8C8C8)),
-            highlightSelected: true,
-            canEventMarkersOverflow: true,
-            markersPositionBottom: 1,
-            markersAlignment: Alignment.bottomCenter,
-            markersColor: Colors.black,
-            markersMaxAmount: 1,
-            markersPositionLeft: 22,
-            contentPadding: EdgeInsets.only(top: 10),
-            outsideDaysVisible: false,
-          ),
-          headerStyle: HeaderStyle(
-            formatButtonShowsNext: true,
-            formatButtonVisible: false,
-            titleTextStyle: Theme.of(context).textTheme.headline1,
+    Widget _myDayEvents = displayRangedEvents(context);
+    tableCalendar = TableCalendar(
+      calendarController: calendarController,
+      initialCalendarFormat: CalendarFormat.month,
+      events: dayEvents,
+      availableGestures: AvailableGestures.verticalSwipe,
+      availableCalendarFormats: {CalendarFormat.month: 'Month'},
+      headerVisible: true,
+      calendarStyle: CalendarStyle(
+        weekdayStyle: TextStyle(
+            fontFamily: "Phenomena", fontSize: 16, color: Colors.pink),
+        weekendStyle: TextStyle(
+            fontFamily: "Phenomena", fontSize: 16, color: Color(0xFFC8C8C8)),
+        highlightSelected: true,
+        canEventMarkersOverflow: true,
+        markersPositionBottom: 1,
+        markersAlignment: Alignment.bottomCenter,
+        markersColor: Colors.black,
+        markersMaxAmount: 1,
+        markersPositionLeft: 22,
+        contentPadding: EdgeInsets.only(top: 10),
+        outsideDaysVisible: false,
+      ),
+      headerStyle: HeaderStyle(
+        formatButtonShowsNext: true,
+        formatButtonVisible: false,
+        titleTextStyle: Theme.of(context).textTheme.headline1,
 //            TextStyle(
 //                fontFamily: "Phenomena",
 //                fontSize: 30,
 //                color: Colors.pink),
-          ),
-          daysOfWeekStyle: DaysOfWeekStyle(
-              dowTextBuilder: (date, locale) {
-                return DateFormat.E(locale).format(date)[0];
-              },
-              weekdayStyle: TextStyle(
-                  color: Color(0xFFD89BAA), //D06BA4
-                  fontFamily: "Phenomena",
-                  fontSize: 18),
-              weekendStyle: TextStyle(
-                color: Color.fromRGBO(200, 200, 200, 90),
-                fontSize: 18,
-                fontFamily: "Phenomena",
-              )
+      ),
+      daysOfWeekStyle: DaysOfWeekStyle(
+          dowTextBuilder: (date, locale) {
+            return DateFormat.E(locale).format(date)[0];
+          },
+          weekdayStyle: TextStyle(
+              color: Color(0xFFD89BAA), //D06BA4
+              fontFamily: "Phenomena",
+              fontSize: 18),
+          weekendStyle: TextStyle(
+            color: Color.fromRGBO(200, 200, 200, 90),
+            fontSize: 18,
+            fontFamily: "Phenomena",
+          )
 //              weekdayStyle:WeekdayFormat.short,
-              ),
-          onDaySelected: (day, events) {
-            setState(() {
+          ),
+      onDaySelected: (day, events) {
+        setState(() {
 //               if( globals.dayEvents.length>=1){globals.selectedEvents=events;}else{}
-              selectedDayEvents = events;
 
+          selectedDayEvents = events;
+          if (selectedDayEvents.isNotEmpty) {
+            _myDayEvents = displayRangedEvents(context);
+          } else {
+            _myDayEvents = displayEvents(context);
+          }
+//              if (selectedDayEvents.isEmpty){
+//              _myDayEvents=displayEvents(context);}
+//              eventIndex =selectedDayEvents.length >= 3 ? 3 : selectedDayEvents.length;
 //              print(selectedDayEvents);
 //              Map<String, dynamic> displayEvent ;//= NewEvent();
 //              displayEvent=events as NewEvent;
@@ -167,7 +96,7 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
 //              selectedDayEvents.map((even) {
 //                displayEvent = events[0];
 //              print(events);
-              // TODO encode to string and cast as NewEvent
+          // TODO encode to string and cast as NewEvent
 //              print(selectedDayEvents);
 //              print(events);
 //              String obj=selectedDayEvents[0];
@@ -210,91 +139,176 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
 //              var list=dayEvents.values.toList();
 //              print(list[0]);
 //                if(globals.dayEvents.length<=1){
-            });
-          },
-          builders: CalendarBuilders(
-            todayDayBuilder: (context, date, events) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  Container(
-                    alignment: Alignment.center,
+        });
+      },
+      builders: CalendarBuilders(
+        todayDayBuilder: (context, date, events) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Container(
+                alignment: Alignment.center,
 //                    height: 32,
 //                    width: 32,
 //                        padding: EdgeInsets.all(6),
-                    margin: EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-//                                borderRadius: BorderRadius.circular(30),
-                      shape: BoxShape.circle,
-                      color: Theme.of(context).backgroundColor,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12.withOpacity(0.5),
-                          blurRadius: 10.0,
-                          spreadRadius: 1.0,
-                          offset: Offset(
-                            0,
-                            0,
-                          ),
-                        ),
-                      ],
-                    ),
-                    child: Text(
-                      date.day.toString(),
-                      softWrap: true,
-                      style: TextStyle(
-                          fontFamily: "Phenomena",
-                          fontSize: 18,
-                          color: Colors.pink),
-                    ),
-                  ),
-                ],
-              );
-            },
-            selectedDayBuilder: (context, date, events) {
-              return Container(
-                alignment: Alignment.center,
                 margin: EdgeInsets.all(12),
                 decoration: BoxDecoration(
 //                                borderRadius: BorderRadius.circular(30),
                   shape: BoxShape.circle,
-                  color: Color(0xff182231),
-
+                  color: Theme
+                      .of(context)
+                      .backgroundColor,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black,
-                      blurRadius: 2.0,
-                      spreadRadius: 3.0,
+                      color: Colors.black12.withOpacity(0.5),
+                      blurRadius: 10.0,
+                      spreadRadius: 1.0,
                       offset: Offset(
                         0,
-                        3,
+                        0,
                       ),
                     ),
                   ],
                 ),
                 child: Text(
                   date.day.toString(),
-                  textScaleFactor: 2,
+                  softWrap: true,
                   style: TextStyle(
-                    fontFamily: "Phenomena",
+                      fontFamily: "Phenomena",
+                      fontSize: 18,
+                      color: Colors.pink),
+                ),
+              ),
+            ],
+          );
+        },
+        selectedDayBuilder: (context, date, events) {
+          return Container(
+            alignment: Alignment.center,
+            margin: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+//                                borderRadius: BorderRadius.circular(30),
+              shape: BoxShape.circle,
+              color: Color(0xff182231),
+
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black,
+                  blurRadius: 2.0,
+                  spreadRadius: 3.0,
+                  offset: Offset(
+                    0,
+                    3,
                   ),
-                  overflow: TextOverflow.fade,
+                ),
+              ],
+            ),
+            child: Text(
+              date.day.toString(),
+              textScaleFactor: 2,
+              style: TextStyle(
+                fontFamily: "Phenomena",
+              ),
+              overflow: TextOverflow.fade,
+            ),
+          );
+        },
+      ),
+    );
+
+    AnimatedSwitcher eventDisplaySwitcher = AnimatedSwitcher(
+
+        duration: Duration(seconds: 2),
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          final offsetAnimation =
+          Tween<Offset>(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0))
+              .animate(animation);
+          return SlideTransition(
+            position: offsetAnimation,
+            child: FadeTransition(opacity: animation, child: child),
+          );
+        },
+        layoutBuilder: (currentChild, previousChildren) {
+          return currentChild;
+        },
+        switchInCurve: Curves.easeInOut,
+        switchOutCurve: Curves.easeInOut,
+        child:
+        _myDayEvents
+
+    );
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+//        mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        eventDisplaySwitcher,
+//TODO divide the widgets into seperate widgets and initialize them then use them
+        SizedBox(
+          height: 20,
+        ),
+        Bounce(
+          child: IconButton(
+            alignment: Alignment.center,
+            icon: Icon(
+              Icons.expand_more,
+              size: 48,
+              color: Colors.amber,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ViewDayEvents()
+//                      viewDayEvents(context),
                 ),
               );
+//                  setState(() {
+//                    Hero(
+//                      tag: "dayEvents",
+//                      transitionOnUserGestures: true,
+//                      child:
+//                        GestureDetector(
+//                          onTap: () {
+//                            Navigator.push(
+//                                context,
+//                                MaterialPageRoute(
+//                                    builder: (context) => ViewDayEvents(),),);
+//                          }
+//                        child: Padding(
+//                          padding: const EdgeInsets.only(left: 10.0),
+//                          child: Text(
+//                            globals.currentMonth,
+//                            style: TextStyle(
+//                                fontFamily: "Phenomena",
+//                                fontWeight: FontWeight.bold,
+//                                fontSize: 24.0,
+//                                color: CSSColors.deepPink),
+//                          ),
+//                        ),
+//                      ),
+//                      );
+//                  });
             },
           ),
+          infinite: true,
+          duration: Duration(seconds: 2),
+          delay: Duration(seconds: 1),
+          animate: true,
+          from: 10,
         ),
+//        Icon(Icons.expand_more,size: 48,color: Colors.amber,),
+        tableCalendar,
       ],
     );
   }
 
   Widget displayEvents(context) {
-    return Container(height: MediaQuery
-        .of(context)
-        .size
-        .height * 0.26,
+    return Container(
+      height: MediaQuery
+          .of(context)
+          .size
+          .height * 0.26,
       child: Center(
           child: Text(
             "No Events on ",
@@ -314,47 +328,83 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
 ////            var user=  json.decode(jsonDecode(selectedDayEvents[0]));
 //      print(user.toJson());
 //      print(user.title);
+
     return Column(
       children: <Widget>[
+//        Container(
+//          child: AnimatedList(
+//              initialItemCount:selectedDayEvents.length ,
+//              key: eventListKey,
+//              primary: true,
+//              shrinkWrap: true,
+//              physics: BouncingScrollPhysics(),
+//              itemBuilder: (context, index, animation) {
+//            NewEvent user = NewEvent.fromJson((selectedDayEvents[index])as Map<String,dynamic>);
+//          return FadeIn(
+//              animate: true,
+////                delay: Duration(milliseconds: 1500),
+//              duration: Duration(seconds: 2),
+//              child: Card(
+//                  elevation: 5,
+//                  shadowColor: Colors.black,
+//                  color: Theme.of(context).primaryColor,
+//                  child: ListTile(
+//                      title: Text(
+//                        user.title,
+//                        style: Theme.of(context).textTheme.headline2,
+//                      ),
+//                      trailing: IconButton(
+//                        icon: Icon(MdiIcons.delete),
+//                        color: Colors.pinkAccent,
+//                        onPressed: () {
+//                          setState(() {
+//                            dayEvents.remove(0);
+//                            selectedDayEvents.removeLast();
+//                            print(selectedDayEvents);
+//                            print(dayEvents);
+//                          });
+//                        },
+//                      ),),),);
+
         ...selectedDayEvents.getRange(
             0, selectedDayEvents.length >= 3 ? 3 : selectedDayEvents.length)
-            .map(
-              (event) {
-            var user = NewEvent.fromJson(event);
-            print(user.toJson());
-            return Hero(
-              tag: user.title,
-              child: FadeIn(
-                animate: true,
+            .map((event) {
+          NewEvent user = NewEvent.fromJson(event);
+          print(user.toJson());
+          return Hero(
+            tag: user.title,
+            child: FadeIn(animate: true,
 //                delay: Duration(milliseconds: 1500),
-                duration: Duration(seconds: 2),
-                child: Card(
-                  elevation: 5, shadowColor: Colors.black, color: Theme
-                    .of(context)
-                    .primaryColor,
-                  child: ListTile(
-                    title: Text(user.title, style: Theme
-                        .of(context)
-                        .textTheme
-                        .headline2,),
-                    trailing: IconButton(
-                      icon: Icon(MdiIcons.delete),
-                      color: Colors.pinkAccent,
-                      onPressed: () {
-                        setState(() {
-                          dayEvents.remove(0);
-                          selectedDayEvents.removeLast();
-                          print(selectedDayEvents);
-                          print(dayEvents);
-                        });
-                      },
-                    ),
+              duration: Duration(seconds: 2),
+              child: Card(
+                elevation: 5, shadowColor: Colors.black, color: Theme
+                  .of(context)
+                  .primaryColor,
+                child: ListTile(
+                  title: Text(user.title, style: Theme
+                      .of(context)
+                      .textTheme
+                      .headline2,),
+                  trailing: IconButton(
+                    icon: Icon(MdiIcons.delete),
+                    color: Colors.pinkAccent,
+                    onPressed: () {
+                      setState(() {
+                        dayEvents.remove(0);
+                        selectedDayEvents.removeLast();
+                        print(selectedDayEvents);
+                        print(dayEvents);
+                      });
+                    },
                   ),
                 ),
               ),
-            );
-          },
+            ),
+          );
+        },
         ),
+//          }),
+//        ),
       ],
     );
 
