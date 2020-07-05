@@ -89,13 +89,17 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
       key: _formKey,
       child: Container(
 //      color: Theme.of(context).backgroundColor,
-        margin: EdgeInsets.only(left: 10, right: 10, top: 40),
-        height: MediaQuery.of(context).viewInsets.bottom + 400.0,
+        margin: EdgeInsets.only(
+          left: 10,
+          right: 10,
+          top: 40,
+        ),
+        height: MediaQuery.of(context).viewInsets.bottom + 350.0,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Container(
-              margin: EdgeInsets.symmetric(vertical: 10),
+              margin: EdgeInsets.only(top: 10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
 //              shape: BoxShape.circle,
@@ -130,7 +134,7 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                 style: Theme
                     .of(context)
                     .textTheme
-                    .headline1,
+                    .headline4,
               ),
             ),
 

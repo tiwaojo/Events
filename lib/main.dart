@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:events/globals.dart';
+import 'package:flutter/rendering.dart';
 
 import 'custom_widgets.dart';
 
@@ -53,7 +54,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     Colors.blueGrey.shade500,
   ];
 
-//  LinkedList<> _myEvents; // _calendarController;
 
   final _pageController = PageController(initialPage: 0, keepPage: true);
 
@@ -100,23 +100,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
     switchPage();
 //    _retrieveCalendars();
-
-    animationController1 = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2),
-    );
-    animationController2 = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 1),
-      reverseDuration: Duration(seconds: 2),
-      value: 1,
-      lowerBound: 0.4,
-      upperBound: 1,
-    );
-    animation =
-        CurvedAnimation(parent: animationController2, curve: Curves.easeOut);
-    animationController2.forward();
-    animationController1.reverse();
   }
 
   @override
@@ -124,10 +107,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     //
     super.dispose();
 
-    animationController2.dispose();
-    animationController1.dispose();
-    _pageController.dispose();
     calendarController.dispose();
+    _pageController.dispose();
   }
 
 //  @override
@@ -159,15 +140,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       children: <Widget>[
         body(context),
 //        viewDayEvents(context),
-        ViewDayEvents(),
+//        ViewDayEvents(),
       ],
     );
     return Scaffold(
       key: scaffoldKey,
       body: Container(
-//        height: double.infinity,
-//        /*        MediaQuery.of(context).size.height,*/
-        width: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: menuGradient ? dkMdMenu : lghtMdMenu,
@@ -178,7 +156,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         ),
         child: Stack(
           children: <Widget>[
-
             menu(context),
             AnimatedPositioned(
               duration: Duration(seconds: 2),
@@ -375,49 +352,28 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 
   Widget body(context) {
-    return Material(
-      elevation: 8,
-      borderRadius: BorderRadius.circular(16),
-      /*         shadowColor: Colors.black, type: MaterialType.transparency,*/
-      color: Theme
-          .of(context)
-          .scaffoldBackgroundColor,
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-//              appbar(context),
+    return AnimatedSwitcher(
 
-              Appbar(context),
-              AnimatedSwitcher(
-                transitionBuilder: (Widget child, Animation<double> animation) {
-                  final offsetAnimation =
-                  Tween<Offset>(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0))
-                      .animate(animation);
-                  return SlideTransition(
-                    position: offsetAnimation,
-                    child: FadeTransition(opacity: animation, child: child),
-                  );
-                },
-                layoutBuilder: (currentChild, previousChildren) {
-                  return currentChild;
-                },
-                switchInCurve: Curves.easeInOut,
-                switchOutCurve: Curves.easeInOut,
-                duration: Duration(seconds: 3),
+      transitionBuilder: (Widget child, Animation<double> animation) {
+        final offsetAnimation =
+        Tween<Offset>(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0))
+            .animate(animation);
+        return SlideTransition(
+          position: offsetAnimation,
+          child: FadeTransition(opacity: animation, child: child),
+        );
+      },
+      layoutBuilder: (currentChild, previousChildren) {
+        return currentChild;
+      },
+      switchInCurve: Curves.easeInOut,
+      switchOutCurve: Curves.easeInOut,
+      duration: Duration(seconds: 3),
 
-                child: switchWidget == 1 ? MyBody() : switchPage(),
+      child: switchWidget == 1 ? MyBody() : switchPage(),
 //                  (() {
 //                    switchPage()
 //                  }()),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

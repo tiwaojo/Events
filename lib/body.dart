@@ -3,6 +3,7 @@ import 'package:events/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 import 'custom_widgets.dart';
 
@@ -28,14 +29,54 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
 //  printEvents() {}
 
   @override
+  void initState() {
+    // TODO: implement initState
+
+    animationController1 = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+    slideAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+    slideAnimation =
+        Tween<Offset>(begin: Offset(0.0, 0.7), end: Offset(0.0, 0.0))
+            .animate(slideAnimationController);
+    animation = CurvedAnimation(
+        parent: animationController1,
+        curve: Curves.easeIn,
+        reverseCurve: Curves.easeOut);
+//  posAnimation =CurvedAnimation(parent: animationController2, curve: Curves.easeOut);
+//    animation = Tween(begin: 0.0, end: 1.0).animate(animationController1);
+    animationController1.forward();
+    slideAnimationController.forward();
+
+//  animationController1.reverse();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    slideAnimationController.dispose();
+    animationController1.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    Widget _myDayEvents = displayRangedEvents(context);
+    var _color = Colors.black;
+//    Widget _myDayEvents = displayEvents(context);
     tableCalendar = TableCalendar(
       calendarController: calendarController,
       initialCalendarFormat: CalendarFormat.month,
       events: dayEvents,
-      availableGestures: AvailableGestures.verticalSwipe,
+      availableGestures: AvailableGestures.horizontalSwipe,
       availableCalendarFormats: {CalendarFormat.month: 'Month'},
+      formatAnimation: FormatAnimation.slide,
+      initialSelectedDay: currentDate,
       headerVisible: true,
       calendarStyle: CalendarStyle(
         weekdayStyle: TextStyle(
@@ -45,17 +86,18 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
         highlightSelected: true,
         canEventMarkersOverflow: true,
         markersPositionBottom: 1,
+        renderDaysOfWeek: true,
         markersAlignment: Alignment.bottomCenter,
-        markersColor: Colors.black,
+        markersColor: Colors.blue,
         markersMaxAmount: 1,
         markersPositionLeft: 22,
-        contentPadding: EdgeInsets.only(top: 10),
+//        contentPadding: EdgeInsets.only(top: 10),
         outsideDaysVisible: false,
       ),
       headerStyle: HeaderStyle(
-        formatButtonShowsNext: true,
+//        formatButtonShowsNext: true,
         formatButtonVisible: false,
-        titleTextStyle: Theme.of(context).textTheme.headline1,
+        titleTextStyle: Theme.of(context).textTheme.headline4,
 //            TextStyle(
 //                fontFamily: "Phenomena",
 //                fontSize: 30,
@@ -75,70 +117,10 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
             fontFamily: "Phenomena",
           )
 //              weekdayStyle:WeekdayFormat.short,
-          ),
+      ),
       onDaySelected: (day, events) {
         setState(() {
-//               if( globals.dayEvents.length>=1){globals.selectedEvents=events;}else{}
-
           selectedDayEvents = events;
-          if (selectedDayEvents.isNotEmpty) {
-            _myDayEvents = displayRangedEvents(context);
-          } else {
-            _myDayEvents = displayEvents(context);
-          }
-//              if (selectedDayEvents.isEmpty){
-//              _myDayEvents=displayEvents(context);}
-//              eventIndex =selectedDayEvents.length >= 3 ? 3 : selectedDayEvents.length;
-//              print(selectedDayEvents);
-//              Map<String, dynamic> displayEvent ;//= NewEvent();
-//              displayEvent=events as NewEvent;
-//              print(displayEvent.title);
-//              selectedDayEvents.map((even) {
-//                displayEvent = events[0];
-//              print(events);
-          // TODO encode to string and cast as NewEvent
-//              print(selectedDayEvents);
-//              print(events);
-//              String obj=selectedDayEvents[0];
-//              selectedDayEvents.forEach((element) {NewEvent obj=NewEvent.fromJson(jsonDecode(element));
-//              print(obj.toJson());
-//              });
-//              var user = NewEvent.fromJson(events[0]);
-//            var user=  json.decode(jsonDecode(selectedDayEvents[0]));
-//              print(user.toJson());
-//              print(user.title);
-//              print(user.startDate);
-//              print(user.endDate);
-//              print(user.description);
-//              String myCode=jsonEncode(encodeMap((events[0])));
-//
-//              print(dayEvents.forEach((key, value) { }));
-//              String userMap = jsonEncode(selectedDayEvents[0]);
-//              var user = NewEvent.fromJson(selectedDayEvents[0]);
-//print(user.title);
-//print(user.startDate);
-//print(user.endDate);
-//print(user.description);
-
-//displayEvent=jsonDecode(selectedDayEvents[0]);
-
-//                print(displayEvent);
-//              });
-//            for(int i=selectedDayEvents.length;i>=0;i--){
-//              print(selectedDayEvents[0]);
-//            }
-
-//            print(selectedDayEvents[1]);
-//              selectedDayEvents.forEach((value) {print(value);});
-//              print(selectedDayEvents[0].toString());
-//              print(dayEvents.values.elementAt(calendarController.selectedDay));
-//              print(dayEvents["2020-06-22 16:45:52.999476"]);
-//              print(dayEvents[calendarController.selectedDay]);
-//              for(var entry in dayEvents.entries){print(entry.value);}
-
-//              var list=dayEvents.values.toList();
-//              print(list[0]);
-//                if(globals.dayEvents.length<=1){
         });
       },
       builders: CalendarBuilders(
@@ -186,6 +168,8 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
         },
         selectedDayBuilder: (context, date, events) {
           return Container(
+//            duration: Duration(seconds: 5),
+//            curve: Curves.bounceInOut,
             alignment: Alignment.center,
             margin: EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -195,7 +179,7 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
 
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black,
+                  color: _color,
                   blurRadius: 2.0,
                   spreadRadius: 3.0,
                   offset: Offset(
@@ -219,7 +203,6 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
     );
 
     AnimatedSwitcher eventDisplaySwitcher = AnimatedSwitcher(
-
         duration: Duration(seconds: 2),
         transitionBuilder: (Widget child, Animation<double> animation) {
           final offsetAnimation =
@@ -235,71 +218,122 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
         },
         switchInCurve: Curves.easeInOut,
         switchOutCurve: Curves.easeInOut,
-        child:
-        _myDayEvents
-
-    );
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-//        mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        eventDisplaySwitcher,
-//TODO divide the widgets into seperate widgets and initialize them then use them
-        SizedBox(
-          height: 20,
+        child: (selectedDayEvents.isEmpty)
+            ? displayEvents(context)
+            : displayRangedEvents(context));
+    return AnimatedContainer(
+      duration: Duration(seconds: 2), curve: Curves.easeInOut,
+//      height: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(resized ? 0 : 16),
+        gradient: LinearGradient(
+          colors: [
+            Colors.black,
+            Theme
+                .of(context)
+                .primaryColor,
+          ],
+          begin: FractionalOffset.bottomCenter,
+          end: FractionalOffset.topCenter,
+          stops: <double>[selected ? 0.1 : 0.15, 0.9,],
         ),
-        Bounce(
-          child: IconButton(
-            alignment: Alignment.center,
-            icon: Icon(
-              Icons.expand_more,
-              size: 48,
-              color: Colors.amber,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ViewDayEvents()
-//                      viewDayEvents(context),
+      ),
+      child: Column(
+//        shrinkWrap: false,
+        mainAxisSize: MainAxisSize.max,
+//        verticalDirection: VerticalDirection.down,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Appbar(context),
+          ListView(shrinkWrap: true, children: [eventDisplaySwitcher]),
+//          SizedBox(
+//            height: 20,
+//          ),
+          AnimatedCrossFade(
+//          turns: selected?animation:null,
+            firstChild: Bounce(
+              child: IconButton(
+                alignment: Alignment.center,
+                icon: Icon(
+                  Icons.expand_more,
+                  size: 48,
+                  color: Colors.amber,
                 ),
-              );
-//                  setState(() {
-//                    Hero(
-//                      tag: "dayEvents",
-//                      transitionOnUserGestures: true,
-//                      child:
-//                        GestureDetector(
-//                          onTap: () {
-//                            Navigator.push(
-//                                context,
-//                                MaterialPageRoute(
-//                                    builder: (context) => ViewDayEvents(),),);
-//                          }
-//                        child: Padding(
-//                          padding: const EdgeInsets.only(left: 10.0),
-//                          child: Text(
-//                            globals.currentMonth,
-//                            style: TextStyle(
-//                                fontFamily: "Phenomena",
-//                                fontWeight: FontWeight.bold,
-//                                fontSize: 24.0,
-//                                color: CSSColors.deepPink),
-//                          ),
-//                        ),
-//                      ),
-//                      );
-//                  });
-            },
+                onPressed: () {
+                  selected = !selected;
+
+                  setState(() {
+//                  animationController2.reverse();
+//                  animationController1.reverse();
+                    calendarController.setCalendarFormat(CalendarFormat.week);
+                  });
+                },
+              ),
+              infinite: true,
+              duration: Duration(seconds: 1),
+              delay: Duration(seconds: 1),
+              animate: true,
+              from: 10,
+            ),
+            duration: Duration(seconds: 2),
+            crossFadeState:
+            selected ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+            alignment: Alignment.center,
+            firstCurve: Curves.bounceIn,
+            reverseDuration: Duration(seconds: 1),
+            secondCurve: Curves.bounceOut,
+            sizeCurve: Curves.easeIn,
+            secondChild: Bounce(
+              child: IconButton(
+                alignment: Alignment.center,
+                icon: Icon(
+                  Icons.expand_less,
+                  size: 48,
+                  color: Colors.amber,
+                ),
+                onPressed: () {
+                  selected = !selected;
+//TODO Align calendar to the bottom of page, rotate the button
+                  setState(() {
+//                  animationController2.reverse();
+//                  animationController1.reverse();
+                    if (selected) {
+                      calendarController
+                          .setCalendarFormat(CalendarFormat.twoWeeks);
+                    } else {
+                      calendarController.setCalendarFormat(
+                          CalendarFormat.month);
+                    }
+                  });
+                },
+              ),
+              infinite: true,
+              duration: Duration(seconds: 2),
+              delay: Duration(seconds: 1),
+              animate: true,
+              from: 10,
+            ),
           ),
-          infinite: true,
-          duration: Duration(seconds: 2),
-          delay: Duration(seconds: 1),
-          animate: true,
-          from: 10,
-        ),
-//        Icon(Icons.expand_more,size: 48,color: Colors.amber,),
-        tableCalendar,
-      ],
+
+
+          Stack(alignment: Alignment.bottomCenter,
+            overflow: Overflow.clip,
+//              alignment: Alignment( MediaQuery.of(context).size.width * 0.5,  MediaQuery.of(context).size.height,),
+            children: [
+              SlideTransition(
+                position: slideAnimation,
+                child: FadeTransition(
+                    opacity: animationController1,
+                    child: Column(mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        tableCalendar,
+                      ],
+                    )),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -322,90 +356,95 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
   }
 
   Widget displayRangedEvents(context) {
-//    selectedDayEvents.map((event) {
-//      var user = NewEvent.fromJson(event);
-//
-////            var user=  json.decode(jsonDecode(selectedDayEvents[0]));
-//      print(user.toJson());
-//      print(user.title);
+//    var count = 0;
+    int numDayEvents = selected ? selectedDayEvents.length : 3;
+    return Container(
+      foregroundDecoration: BoxDecoration(
 
-    return Column(
-      children: <Widget>[
-//        Container(
-//          child: AnimatedList(
-//              initialItemCount:selectedDayEvents.length ,
-//              key: eventListKey,
-//              primary: true,
-//              shrinkWrap: true,
-//              physics: BouncingScrollPhysics(),
-//              itemBuilder: (context, index, animation) {
-//            NewEvent user = NewEvent.fromJson((selectedDayEvents[index])as Map<String,dynamic>);
-//          return FadeIn(
-//              animate: true,
-////                delay: Duration(milliseconds: 1500),
-//              duration: Duration(seconds: 2),
-//              child: Card(
-//                  elevation: 5,
-//                  shadowColor: Colors.black,
-//                  color: Theme.of(context).primaryColor,
-//                  child: ListTile(
-//                      title: Text(
-//                        user.title,
-//                        style: Theme.of(context).textTheme.headline2,
-//                      ),
-//                      trailing: IconButton(
-//                        icon: Icon(MdiIcons.delete),
-//                        color: Colors.pinkAccent,
-//                        onPressed: () {
-//                          setState(() {
-//                            dayEvents.remove(0);
-//                            selectedDayEvents.removeLast();
-//                            print(selectedDayEvents);
-//                            print(dayEvents);
-//                          });
-//                        },
-//                      ),),),);
+        gradient: LinearGradient(
+          colors: [
 
-        ...selectedDayEvents.getRange(
-            0, selectedDayEvents.length >= 3 ? 3 : selectedDayEvents.length)
-            .map((event) {
-          NewEvent user = NewEvent.fromJson(event);
-          print(user.toJson());
-          return Hero(
-            tag: user.title,
-            child: FadeIn(animate: true,
+            Colors.black.withOpacity(0.9),
+            Theme
+                .of(context)
+                .primaryColor
+                .withOpacity(0.01),
+          ],
+          begin: FractionalOffset.bottomCenter,
+          end: FractionalOffset.topCenter,
+          stops: <double>[selected ? 0.1 : 0.0, selected ? 0.4 : 0.0,],
+        ),
+      ),
+      height: selected ? MediaQuery
+          .of(context)
+          .size
+          .height * 0.5 : MediaQuery
+          .of(context)
+          .size
+          .height * 0.26,
+      child: ListView(shrinkWrap: true,
+//      verticalDirection: VerticalDirection.down,mainAxisSize: ,
+        children: <Widget>[
+          ...selectedDayEvents.getRange(0,
+              selectedDayEvents.length >= numDayEvents
+                  ? numDayEvents
+                  : selectedDayEvents.length).map(
+                (event) {
+              NewEvent user = NewEvent.fromJson(event);
+//          print(user.toJson());
+              return FadeIn(
+                animate: true,
 //                delay: Duration(milliseconds: 1500),
-              duration: Duration(seconds: 2),
-              child: Card(
-                elevation: 5, shadowColor: Colors.black, color: Theme
-                  .of(context)
-                  .primaryColor,
-                child: ListTile(
-                  title: Text(user.title, style: Theme
+                duration: Duration(seconds: 2),
+                child: Card(
+                  elevation: 5,
+                  shadowColor: Colors.black,
+                  margin: EdgeInsets.symmetric(vertical: 10.0),
+                  color: Theme
                       .of(context)
-                      .textTheme
-                      .headline2,),
-                  trailing: IconButton(
-                    icon: Icon(MdiIcons.delete),
-                    color: Colors.pinkAccent,
-                    onPressed: () {
-                      setState(() {
-                        dayEvents.remove(0);
-                        selectedDayEvents.removeLast();
-                        print(selectedDayEvents);
-                        print(dayEvents);
-                      });
-                    },
+                      .primaryColor,
+                  child: ListTile(
+                    title: AnimatedDefaultTextStyle(
+                      duration: Duration(seconds: 2),
+                      style: calendarController.calendarFormat ==
+                          CalendarFormat.twoWeeks
+                          ? Theme
+                          .of(context)
+                          .textTheme
+                          .headline4
+                          .copyWith(
+                          fontSize: 60.0 - selectedDayEvents.length)
+                          : Theme
+                          .of(context)
+                          .textTheme
+                          .headline4,
+                      curve: Curves.ease,
+                      child: Text(
+                        user.title,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(MdiIcons.delete),
+                      color: Colors.pinkAccent,
+                      onPressed: () {
+                        setState(() {
+                          dayEvents.remove(0);
+                          selectedDayEvents.removeLast();
+                          print(selectedDayEvents);
+                          print(dayEvents);
+                        });
+                      },
+                    ),
                   ),
                 ),
-              ),
-            ),
-          );
-        },
-        ),
+              );
+            },
+          ),
 //          }),
 //        ),
-      ],
+        ],
+      ),
     );
 
 //      return LimitedBox(maxHeight: 200,maxWidth: MediaQuery.of(context).size.width,

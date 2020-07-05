@@ -4,12 +4,17 @@ final ThemeData light = ThemeData(
   textTheme: TextTheme(
     headline1: TextStyle(
       fontFamily: "Phenomena",
-      fontSize: 30,
+//      fontSize: 30,
       color: Color(0xFFFF3366),
     ),
     headline2: TextStyle(
       fontFamily: "Phenomena",
       fontSize: 16,
+      color: Color(0xFFFF3366),
+    ),
+    headline4: TextStyle(
+      fontFamily: "Phenomena",
+//      fontSize: 30,
       color: Color(0xFFFF3366),
     ),
   ),
@@ -20,12 +25,17 @@ final ThemeData dark = ThemeData(
   textTheme: TextTheme(
     headline1: TextStyle(
       fontFamily: "Phenomena",
-      fontSize: 30,
+//      fontSize: 30,
       color: Color(0xFFFF3366),
     ),
     headline2: TextStyle(
       fontFamily: "Phenomena",
       fontSize: 16,
+      color: Color(0xFFFF3366),
+    ),
+    headline4: TextStyle(
+      fontFamily: "Phenomena",
+//      fontSize: 30,
       color: Color(0xFFFF3366),
     ),
   ),

@@ -18,7 +18,11 @@ export 'package:table_calendar/table_calendar.dart';
 
 final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 Animation<double> animation;
-AnimationController animationController1, animationController2;
+Animation<Offset> slideAnimation;
+Animation<RelativeRect> posAnimation;
+AnimationController animationController1, slideAnimationController;
+//final paddingTween=EdgeInsetsTween(begin: Edge,)
+
 String currentMonth = DateFormat.MMMM().format(DateTime.now());
 //DateTime eventDateTime = DateTime.now().add(Duration(days: 1));//DateTime(2020, 6, 8);
 //DateTime targetDateTime = DateTime(2020, 6, 8);
@@ -28,8 +32,9 @@ DateTime endDate = DateTime.now().add(Duration(days: 1));
 TableCalendar tableCalendar;
 bool modalOpen = false;
 bool resized = true;
+bool selected = false;
 int switchWidget = 1;
-var scale = animationController2;
+var scale = slideAnimationController;
 bool menuGradient = false;
 
 //void showToast(BuildContext context) {

@@ -16,7 +16,8 @@ class _AppbarState extends State<Appbar> {
   Widget build(BuildContext context) {
 //    Widget appbar(context) {
     return Container(
-      margin: EdgeInsets.only(top: 20),
+      margin: EdgeInsets.only(top: 10),
+      padding: EdgeInsets.only(top: 2),
 //        width: MediaQuery.of(context).size.width,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -27,21 +28,19 @@ class _AppbarState extends State<Appbar> {
             alignment: Alignment.center,
             child: Transform.rotate(
               angle: pi / 2,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: IconButton(
+              child: IconButton(
 //                                                  icon: Icon(MdiIcons.equalizerOutline),
-                    icon: Icon(IconData(0xe800, fontFamily: "appicons")),
-                    color: Colors.pink,
-                    splashColor: Colors.blue,
-                    hoverColor: Colors.green,
-                    onPressed: () {
-                      resized = !resized;
-                      setState(() {
-                        main();
-                      });
-                    }),
-              ),
+                  icon: Icon(IconData(0xe800, fontFamily: "appicons")),
+                  iconSize: 30,
+                  color: Colors.pink,
+                  splashColor: Colors.blue,
+                  hoverColor: Colors.green,
+                  onPressed: () {
+                    resized = !resized;
+                    setState(() {
+                      main();
+                    });
+                  }),
             ),
           ),
           IconButton(
