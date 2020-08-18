@@ -18,6 +18,7 @@ final ThemeData light = ThemeData(
       color: Color(0xFFFF3366),
     ),
   ),
+  accentColor: Color(0xFFFF3366),
   scaffoldBackgroundColor: Color(0xFF4a6a97),
 );
 
@@ -50,6 +51,7 @@ final ThemeData dark = ThemeData(
   ),
   scaffoldBackgroundColor: Color(0xff182231),
   primaryColor: Color(0xff182231),
+  accentColor: Color(0xFFFF3366),
 );
 
 class ThemeNotifier extends ChangeNotifier {

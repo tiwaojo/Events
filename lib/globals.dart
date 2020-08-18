@@ -17,10 +17,13 @@ export 'package:shared_preferences/shared_preferences.dart';
 export 'package:table_calendar/table_calendar.dart';
 
 final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
-Animation<double> animation;
+Animation<double> animation, rotateAnimation;
 Animation<Offset> slideAnimation;
 Animation<RelativeRect> posAnimation;
-AnimationController animationController1, slideAnimationController;
+//Animation<DecoratedBox>decBoxAnimation;
+AnimationController opacityController,
+    slideAnimationController,
+    rotateController; //,decBoxAnimationController;
 //final paddingTween=EdgeInsetsTween(begin: Edge,)
 
 String currentMonth = DateFormat.MMMM().format(DateTime.now());
@@ -36,7 +39,8 @@ bool selected = false;
 int switchWidget = 1;
 var scale = slideAnimationController;
 bool menuGradient = false;
-
+double decorGradient = 0.25;
+Duration duration = Duration(seconds: 2);
 //void showToast(BuildContext context) {
 //  final scaffold = Scaffold.of(context);
 //  scaffold.showSnackBar(
@@ -110,16 +114,16 @@ class NewEvent {
   String description;
 
   //if using {this.description} instead of [this.description], to assign a value use paramName:Value (e.g. var customer = Customer("bezkoder", location: "US", age: 26);
-  NewEvent([this.title, this.startDate, this.endDate, this.description]);
+  NewEvent(this.title, this.startDate, this.endDate, this.description);
 
   Map<String, dynamic> toJson() => {
 //   Map startDate = this.startDate != null ? this.startDate.toJson() : null;
 
 //    return {
-        "title": title,
-        "startDate": startDate,
-        "endDate": endDate,
-        "description": description,
+        'title': this.title,
+        'startDate': this.startDate,
+        'endDate': this.endDate,
+        'description': this.description,
 //    };
       };
 
@@ -129,6 +133,13 @@ class NewEvent {
 //        endDate = json['endDate'],
 //        description = json['description'];
 //  }
+
+//  NewEvent.fromJson(   dynamic data)
+//      : title = data["title"],
+//        startDate = data['startDate'],
+//        endDate = data['endDate'],
+//        description = data['description'];
+
   factory NewEvent.fromJson(dynamic json) {
     return NewEvent(
         json['title'], json['startDate'], json['endDate'], json['description']);

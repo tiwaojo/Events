@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:math';
 
 import 'package:events/globals.dart';
 import 'package:flutter/rendering.dart';
@@ -18,8 +18,10 @@ class MyApp extends StatelessWidget {
       child: Consumer<ThemeNotifier>(
           builder: (BuildContext context, ThemeNotifier notifier, child) {
         return MaterialApp(
-          title: 'Task',
+          title: 'Events',
 //      routes: ,
+//        debugShowCheckedModeBanner: false,
+//          debugShowMaterialGrid: false,
           theme: notifier.darkTheme ? dark : light,
 //routes: ,
           home: MyHomePage(),
@@ -53,7 +55,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     Colors.blueGrey.shade400,
     Colors.blueGrey.shade500,
   ];
-
 
   final _pageController = PageController(initialPage: 0, keepPage: true);
 
@@ -96,7 +97,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     calendarController = CalendarController();
     dayEvents = {};
     selectedDayEvents = [];
-    initPrefs();
 
     switchPage();
 //    _retrieveCalendars();
@@ -116,13 +116,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 //    //
 //    super.deactivate();
 //  }
-  void initPrefs() async {
-    eventPrefs = await SharedPreferences.getInstance();
-    setState(() {
-      dayEvents = Map<DateTime, List<dynamic>>.from(
-          decodeMap(json.decode(eventPrefs.getString("events") ?? "{}")));
-    });
-  }
 
 
   @override
@@ -144,8 +137,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       ],
     );
     return Scaffold(
+      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomPadding: true,
       key: scaffoldKey,
-      body: Container(
+      body: AnimatedContainer(
+        duration: duration,
+        curve: Curves.easeInOut,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: menuGradient ? dkMdMenu : lghtMdMenu,
@@ -158,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           children: <Widget>[
             menu(context),
             AnimatedPositioned(
-              duration: Duration(seconds: 2),
+              duration: Duration(seconds: 1),
               top: resized ? 0 : 0.2 * screenHeight,
               bottom: resized ? 0 : screenWidth * 0.2,
               left: resized ? 0 : screenWidth * 0.6,
@@ -172,75 +169,78 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     );
   }
 
-//  Widget appbar(context) {
-//    return Container(
-//
-//      margin: EdgeInsets.only(top: 20),
-//      width: MediaQuery.of(context).size.width,
-//      child: Row(
-//        crossAxisAlignment: CrossAxisAlignment.center,
-//        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//        children: <Widget>[
-//          Transform(
-//            transform: Matrix4.rotationX(pi),
-//            alignment: Alignment.center,
-//            child: Transform.rotate(
-//              angle: pi / 2,
-//              child: Padding(
-//                padding: const EdgeInsets.all(8.0),
-//                child: IconButton(
-////                                                  icon: Icon(MdiIcons.equalizerOutline),
-//                    icon: Icon(IconData(0xe800, fontFamily: "appicons")),
-//                    color: Colors.pink,
-//                    splashColor: Colors.blue,
-//                    hoverColor: Colors.green,
-//                    onPressed: () {
-//                      setState(
-//                              () {
-//                            resized = !resized;
-//                          });
-//                    }),
-//              ),
-//            ),
-//          ),
-//          IconButton(
-//            icon: Icon(Icons.add),
-//            color: Colors.pink,
-//            iconSize: 30,
-//            onPressed: () {
-//              if (modalOpen == false) {
-//                modalOpen = true;
-//                showModalBottomSheet(
-//                  context: context,
-//                  builder: (context) {
-//                    return SingleChildScrollView(
-//                      child: ModalBottomSheet(),
-//                    );
-//                  },
-//                  backgroundColor: Colors.blueGrey,
-//                  enableDrag: true,
-//                  shape: RoundedRectangleBorder(
-//                    borderRadius: BorderRadius.vertical(
-//                      top: Radius.circular(25.0),
-//                    ),
-//                  ),
-//                  isScrollControlled: true,
-//                  useRootNavigator: true,
-//                  isDismissible: true,
-//                );
-//              }
-//              if (modalOpen == true) {
-//                modalOpen = false;
-////                setState(() {
-////                  eTitleController.clear();
-////                });
-//              }
-//            },
-//          ),
-//        ],
-//      ),
-//    );
-//  }
+  Widget appbar(context) {
+    return Container(
+      margin: EdgeInsets.only(top: 20),
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Transform(
+            transform: Matrix4.rotationX(pi),
+            alignment: Alignment.center,
+            child: Transform.rotate(
+              angle: pi / 2,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: IconButton(
+//                                                  icon: Icon(MdiIcons.equalizerOutline),
+                    icon: Icon(IconData(0xe800, fontFamily: "appicons")),
+                    color: Colors.pink,
+                    splashColor: Colors.blue,
+                    hoverColor: Colors.green,
+                    onPressed: () {
+                      setState(() {
+                        resized = !resized;
+                      });
+                    }),
+              ),
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.add),
+            color: Colors.pink,
+            iconSize: 30,
+            onPressed: () {
+              if (modalOpen == false) {
+                modalOpen = true;
+                setState(() {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return SingleChildScrollView(
+                        child: ModalBottomSheet(),
+                      );
+                    },
+                    backgroundColor: Colors.blueGrey,
+                    enableDrag: true,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(25.0),
+                      ),
+                    ),
+                    isScrollControlled: true,
+                    useRootNavigator: true,
+                    isDismissible: true,
+                  );
+                });
+              }
+              if (modalOpen == true) {
+                modalOpen = false;
+//                setState(() {
+//                  eTitleController.clear();
+//                });
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget menu(context) {
     return AnimatedOpacity(
@@ -352,28 +352,44 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 
   Widget body(context) {
-    return AnimatedSwitcher(
+    return AnimatedContainer(
+      duration: Duration(seconds: 2),
+      curve: Curves.easeInOut,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(resized ? 0 : 16),
+        color: Theme
+            .of(context)
+            .primaryColor,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          appbar(context),
+          AnimatedSwitcher(
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              final offsetAnimation = Tween<Offset>(
+                  begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0))
+                  .animate(animation);
+              return SlideTransition(
+                position: offsetAnimation,
+                child: FadeTransition(opacity: animation, child: child),
+              );
+            },
+            layoutBuilder: (currentChild, previousChildren) {
+              return currentChild;
+            },
+            switchInCurve: Curves.easeInOut,
+            switchOutCurve: Curves.easeInOut,
+            duration: Duration(seconds: 3),
 
-      transitionBuilder: (Widget child, Animation<double> animation) {
-        final offsetAnimation =
-        Tween<Offset>(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0))
-            .animate(animation);
-        return SlideTransition(
-          position: offsetAnimation,
-          child: FadeTransition(opacity: animation, child: child),
-        );
-      },
-      layoutBuilder: (currentChild, previousChildren) {
-        return currentChild;
-      },
-      switchInCurve: Curves.easeInOut,
-      switchOutCurve: Curves.easeInOut,
-      duration: Duration(seconds: 3),
-
-      child: switchWidget == 1 ? MyBody() : switchPage(),
+            child: switchWidget == 1 ? MyBody() : switchPage(),
 //                  (() {
 //                    switchPage()
 //                  }()),
+          ),
+        ],
+      ),
     );
   }
 }

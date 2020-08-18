@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:events/custom_widgets.dart';
 import 'package:events/globals.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -14,7 +16,7 @@ class _ViewDayEventsState extends State<ViewDayEvents> {
   @override
   Widget build(BuildContext context) {
     var count = 0;
-    int numDayEvents = 3;
+//    int numDayEvents = 3;
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
@@ -24,15 +26,17 @@ class _ViewDayEventsState extends State<ViewDayEvents> {
               .getRange(0,
                   selectedDayEvents.length >= 3 ? 3 : selectedDayEvents.length)
               .map(
-            (event) {
-              NewEvent user = NewEvent.fromJson(event);
+                (event) {
+              NewEvent user = json.decode(event);
 
               return Hero(
                 tag: user.title + "$count++",
                 child: Card(
                   elevation: 5,
                   shadowColor: Colors.black,
-                  color: Theme.of(context).primaryColor,
+                  color: Theme
+                      .of(context)
+                      .primaryColor,
                   child: ListTile(
                     title: Text(
                       user.title,

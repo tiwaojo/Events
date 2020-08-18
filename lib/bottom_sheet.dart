@@ -10,9 +10,10 @@ class ModalBottomSheet extends StatefulWidget {
 }
 
 int maxLength = 0;
+
 int maxLines = 0;
 
-var _dayEvent = new NewEvent();
+var _dayEvent = new NewEvent(null, null, null, null);
 
 class _ModalBottomSheetState extends State<ModalBottomSheet> {
   final _formKey = GlobalKey<FormState>();
@@ -69,11 +70,6 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
 //    initPrefs();
   }
 
-  @override
-  void didUpdateWidget(ModalBottomSheet oldWidget) {
-    // TODO: implement didUpdateWidget
-    super.didUpdateWidget(oldWidget);
-  }
 
   @override
   void dispose() {
@@ -427,75 +423,83 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
 ////                        print(_dayEvent.description);
 //                      }
 
-                    setState(() {
-                      //TODO write a recursive method that will reassign [calendarController.selectedDay] to the days within the startDate and the endDate
+                    //TODO write a recursive method that will reassign [calendarController.selectedDay] to the days within the startDate and the endDate
 //                        calendarController.setSelectedDay(DateTime(startDate.year,startDate.month,startDate.day,0,0),animate: false);
-                      if (dayEvents[DateTime(
-                          startDate.year, startDate.month, startDate.day, 0,
-                          0)] != null) {
+                    if (dayEvents[DateTime(startDate.year, startDate.month,
+                            startDate.day, 0, 0)] !=
+                        null) {
 //                          print(_dayEvent);
-                        //add _dayEvent object to the dayEvents map
-                        dayEvents[DateTime(
-                            startDate.year, startDate.month, startDate.day, 0,
-                            0)].add(_dayEvent);
-                        calendarController.visibleEvents;
+                      //add _dayEvent object to the dayEvents map
+                      dayEvents[DateTime(startDate.year, startDate.month,
+                              startDate.day, 0, 0)]
+                          .add(_dayEvent.toJson());
+                      calendarController.visibleEvents;
 //                          selectedDayEvents.forEach((element) {
 //                            var user = NewEvent.fromJson(element);
 //                            print(user.toJson());});
 //                          print(DateTime(startDate.year,startDate.month,startDate.day,0,0));
-                        print("More than one event exists for this day");
+                      print("More than one event exists for this day");
 //                          print(dayEvents);
 //                          print(calendarController.selectedDay);
 
-                      } else {
-                        //TODO cannot have new event [_dayEvent] be saved to key [startDate]. It will override the previous value
-                        // TODO need to fix map error. Upon adding an event, the event will not append to the screen and an error displays instead. (Error is yet to be diagnosed)
+                    } else {
+                      //TODO cannot have new event [_dayEvent] be saved to key [startDate]. It will override the previous value
 
-                        dayEvents[DateTime(startDate.year, startDate.month,
-                            startDate.day, 0, 0)] = [_dayEvent];
+                      dayEvents[DateTime(
+                          startDate.year, startDate.month, startDate.day, 0,
+                          0)] = [_dayEvent.toJson()];
 
-                        print("An event has been added");
+                      print("An event has been added");
 //                          print(dayEvents.values.toList());
 //                          print(selectedDayEvents);
 
-                      }
+                    }
 
-                      eventPrefs.setString(
-                          "events", json.encode(encodeMap(dayEvents)));
+                    eventPrefs.setString(
+                        "events", json.encode(encodeMap(dayEvents)));
 //                      eventListKey.currentState.insertItem(selectedDayEvents.length+1);
-                      if (calendarController.isSelected(startDate)) {
-                        eventListKey.currentState
-                            .insertItem(selectedDayEvents.length + 1);
-                      }
+                    if (calendarController.isSelected(startDate)) {
+                      eventListKey.currentState
+                          .insertItem(selectedDayEvents.length + 1);
+                    }
 
-                      eTitleController.clear();
-                      eDescrptionController.clear();
+                    eTitleController.clear();
+                    eDescrptionController.clear();
 //                      _dayEvent = null;
-                      Navigator.pop(context);
+                    Navigator.pop(context);
+                    setState(() {
                       scaffoldKey.currentState.showSnackBar(
                         SnackBar(
                           content: Text('Event Added'),
                           duration: Duration(seconds: 10),
-//                            action: SnackBarAction(
-//                              label: "Redo",
-//                              onPressed: () {
-//                                ModalBottomSheet();
-//                              },
-//                            ),
+                          action: SnackBarAction(
+                            label: "Redo",
+                            onPressed: () {
+                              ModalBottomSheet();
+                            },
+                          ),
                         ),
-
                       );
                     });
-//                    }
-
-//                    eTitleController.clear();
-//                    eDescrptionController.clear();
                   },
                 ),
                 FlatButton(
                   onPressed: () {
                     Navigator.pop(context);
-
+                  },
+                  child: Center(child: Text("Cancel")),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
 //                  print(dayEvents);
 ////                  dayEvents=[(dayEvents.keys,dayEvents)];
 //                  print(selectedDayEvents);
@@ -514,21 +518,6 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
 //                      print("key: $key and value: $value");
 //                      value.forEach((element) {element=someEventList;print(someEventList);});
 //                    });
-                  },
-                  child: Center(child: Text("Cancel")),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ],
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 /*Future.delayed(Duration(seconds;3)).then((value){progressDialog.update/show/hide();});*/
 
 //assert is to tell the program that to make sure the variable has the correct parameters//                              assert(
