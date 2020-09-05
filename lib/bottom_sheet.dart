@@ -57,7 +57,7 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
               pickedDate.day, value.hour, value.minute);
         });
       }
-      print("Picked Date: $pickedDate ");
+//      print("Picked Date: $pickedDate ");
       return pickedDate;
     });
   }
@@ -134,12 +134,12 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
               ),
             ),
 
-//START DATE
             Container(
               padding: EdgeInsets.all(8),
               alignment: Alignment.centerRight,
               child: Column(
                 children: <Widget>[
+                  //START DATE
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -153,10 +153,12 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                               showDatePicker(
                                 context: context,
                                 initialDate:
-                                startDate == null ? currentDate : startDate,
+//                                startDate == null ?
+                                currentDate,
+//                                    : startDate,
                                 initialDatePickerMode: DatePickerMode.day,
                                 firstDate: DateTime(2018),
-                                lastDate: DateTime(2021),
+                                lastDate: DateTime(currentDate.year + 10),
                                 builder: (context, child) {
                                   return Theme(
                                       data: menuGradient
@@ -185,9 +187,10 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                                 setState(() {
                                   if (value != null) {
                                     startDate = value;
-                                    endDate = value.add(
-                                      Duration(days: 1),
-                                    );
+                                    endDate = value;
+//                                        .add(
+//                                      Duration(days: 1),
+//                                    );
                                   }
 
 //                                startDate.difference(endDate).inDays>=1?startDate.subtract(Duration(days: 1)):endDate=startDate;
@@ -197,21 +200,16 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                             icon: Icon(Icons.calendar_today),
                             label: Text(
                               startDate == null
-                                  ? DateFormat("MMMM dd, yyyy")
+                                  ? DateFormat("EEE., MMM d, yyyy")
                                   .format(currentDate)
                                   .toString()
-                                  : DateFormat("MMMM dd, yyyy")
+                                  : DateFormat("EEE., MMM d, yyyy")
                                   .format(startDate)
                                   .toString(),
                             ),
                           ),
                           FlatButton.icon(
                             onPressed: () {
-//                              print(startDate);
-//setState(() {
-//  selectTime(context, startDate);
-//});
-
                               showTimePicker(
                                 context: context,
                                 initialTime: _timeOfDay,
@@ -264,26 +262,24 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                         children: <Widget>[
                           FlatButton.icon(
                             onPressed: () {
-                              print(endDate);
                               showDatePicker(
                                 context: context,
                                 initialDate:
 //                              startDate == null
 //                                  ?
-                                endDate,
+                                startDate,
 //                                  : startDate.add(Duration(days: 1),
 //                                    ),
                                 initialDatePickerMode: DatePickerMode.day,
                                 firstDate: DateTime(2018),
-                                lastDate: DateTime(2021),
+                                lastDate: DateTime(currentDate.year + 10),
                               ).then((value) {
                                 setState(() {
                                   if (value != null) {
                                     endDate = value;
                                     if (startDate
                                         .difference(endDate)
-                                        .inDays >=
-                                        1) {
+                                        .inDays > 1) {
                                       endDate = startDate.add(
                                         Duration(days: 1),
                                       );
@@ -295,22 +291,21 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                             icon: Icon(MdiIcons.calendarPlus),
                             label: Text(
                               endDate == null
-                                  ? DateFormat("MMMM dd, yyyy")
+                                  ? DateFormat("EEE., MMM d, yyyy")
                                   .format(
-                                currentDate.add(
+                                currentDate
+                                    .add(
                                   Duration(days: 1),
                                 ),
                               )
                                   .toString()
-                                  : DateFormat("MMMM dd, yyyy")
+                                  : DateFormat("EEE., MMM d, yyyy")
                                   .format(endDate)
                                   .toString(),
                             ),
                           ),
                           FlatButton.icon(
                             onPressed: () {
-//                              print(endDate);
-
                               showTimePicker(
                                 context: context,
                                 initialTime: _timeOfDay,
@@ -363,7 +358,6 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
               keyboardAppearance: Brightness.dark,
               textCapitalization: TextCapitalization.sentences,
               controller: eDescrptionController,
-//                      scrollPadding: EdgeInsets.all(10),
               cursorColor: Colors.pinkAccent,
               maxLines: 4,
               enableSuggestions: true,
@@ -392,95 +386,40 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
 //                   TODO _formKey.currentState.validate/save
-                    if (eTitleController.text.isEmpty) return;
-//                    {
-//                      Navigator.pop(context);
-//                      scaffoldKey.currentState.showSnackBar(
-//                        SnackBar(
-//                          content: Text('Event not added. Title Required'),
-//                          duration: Duration(seconds: 3),
-//                          action: SnackBarAction(
-//                            label: "Redo",
-//                            onPressed: () {
-//                              setState(() {
-//                                ModalBottomSheet();
-//                              });
-//                            },
-//                          ),
-//                        ),
-//                      );
-//                    }
-//                    if (eTitleController.text.isNotEmpty) {
-                    _dayEvent.title = eTitleController.text;
-                    _dayEvent.startDate = startDate.toString();
-                    _dayEvent.endDate = endDate.toString();
-                    _dayEvent.description = eDescrptionController.toString();
-////                      print( _dayEvent.title);
-//                      if (eDescrptionController.text.isEmpty == false) {
-//                        _dayEvent.description = eDescrptionController.text;
-////                        print(_dayEvent.description);
-//                      }
-
-                    //TODO write a recursive method that will reassign [calendarController.selectedDay] to the days within the startDate and the endDate
-//                        calendarController.setSelectedDay(DateTime(startDate.year,startDate.month,startDate.day,0,0),animate: false);
-                    if (dayEvents[DateTime(startDate.year, startDate.month,
-                            startDate.day, 0, 0)] !=
-                        null) {
-//                          print(_dayEvent);
-                      //add _dayEvent object to the dayEvents map
-                      dayEvents[DateTime(startDate.year, startDate.month,
-                              startDate.day, 0, 0)]
-                          .add(_dayEvent.toJson());
-                      calendarController.visibleEvents;
-//                          selectedDayEvents.forEach((element) {
-//                            var user = NewEvent.fromJson(element);
-//                            print(user.toJson());});
-//                          print(DateTime(startDate.year,startDate.month,startDate.day,0,0));
-                      print("More than one event exists for this day");
-//                          print(dayEvents);
-//                          print(calendarController.selectedDay);
-
-                    } else {
-                      //TODO cannot have new event [_dayEvent] be saved to key [startDate]. It will override the previous value
-
-                      dayEvents[DateTime(
-                          startDate.year, startDate.month, startDate.day, 0,
-                          0)] = [_dayEvent.toJson()];
-
-                      print("An event has been added");
-//                          print(dayEvents.values.toList());
-//                          print(selectedDayEvents);
-
+//                    if (eTitleController.text.isEmpty) return;
+                    if (endDate.isAfter(startDate) &&
+                        eTitleController.text.isNotEmpty) {
+                      saveEvent();
+                      Navigator.pop(context);
+                      setState(() {
+                        scaffoldKey.currentState.showSnackBar(
+                          SnackBar(
+                            content: Text('Event Added'),
+                            duration: Duration(seconds: 10),
+                          ),
+                        );
+                      });
                     }
-
-                    eventPrefs.setString(
-                        "events", json.encode(encodeMap(dayEvents)));
-//                      eventListKey.currentState.insertItem(selectedDayEvents.length+1);
-                    if (calendarController.isSelected(startDate)) {
-                      eventListKey.currentState
-                          .insertItem(selectedDayEvents.length + 1);
-                    }
-
-                    eTitleController.clear();
-                    eDescrptionController.clear();
-//                      _dayEvent = null;
-                    Navigator.pop(context);
-                    setState(() {
+                    else if (eTitleController.text.isEmpty) {
+                      Navigator.pop(context);
                       scaffoldKey.currentState.showSnackBar(
                         SnackBar(
-                          content: Text('Event Added'),
-                          duration: Duration(seconds: 10),
-                          action: SnackBarAction(
-                            label: "Redo",
-                            onPressed: () {
-                              ModalBottomSheet();
-                            },
-                          ),
+                          content: Text('Event not added. Title Required'),
+                          duration: Duration(seconds: 3),
                         ),
                       );
-                    });
+                    }
+                    else {
+                      Navigator.pop(context);
+                      scaffoldKey.currentState.showSnackBar(
+                        SnackBar(
+                          content: Text('Event not added. Invalid Datetime.'),
+                          duration: Duration(seconds: 3),
+                        ),
+                      );
+                    }
                   },
                 ),
                 FlatButton(
@@ -499,7 +438,76 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
       ),
     );
   }
+
+  void saveEvent() {
+    _dayEvent.title = eTitleController.text;
+    _dayEvent.startDate = startDate.toString();
+    _dayEvent.endDate = endDate.toString();
+
+    if (eDescrptionController.text.isNotEmpty) {
+      _dayEvent.description = eDescrptionController.text;
+    }
+    else {
+      _dayEvent.description = "";
+    }
+//    if (calendarController.isSelected(startDate)||calendarController.focusedDay==startDate) {
+//      setState(() {
+//        eventListKey.currentState.insertItem(selectedDayEvents.length );
+////
+//      });
+////
+//    }
+
+    //TODO write a recursive method that will reassign [calendarController.selectedDay] to the days within the startDate and the endDate
+//                        calendarController.setSelectedDay(DateTime(startDate.year,startDate.month,startDate.day,0,0),animate: false);
+    if (dayEvents[DateTime(
+        startDate.year, startDate.month, startDate.day, 0, 0)] != null) {
+      dayEvents[DateTime(startDate.year, startDate.month, startDate.day, 0, 0)]
+          .add(_dayEvent.toJson());
+      calendarController.visibleEvents;
+//                          selectedDayEvents.forEach((element) {var user = NewEvent.fromJson(element);
+//                            print(user.toJson());});
+      print("More than one event exists for this day");
+    } else {
+      //TODO cannot have new event [_dayEvent] be saved to key [startDate]. It will override the previous value
+
+      dayEvents[DateTime(
+          startDate.year, startDate.month, startDate.day, 0, 0)] =
+      [_dayEvent.toJson()];
+
+      print("An event has been added");
+//                          print(dayEvents.values.toList());
+//                          print(selectedDayEvents);
+
+    }
+
+    eventPrefs.setString(
+        "events", json.encode(encodeMap(dayEvents)));
+//                      eventListKey.currentState.insertItem(selectedDayEvents.length+1);
+
+    eTitleController.clear();
+    eDescrptionController.clear();
+    orderedSelectedDay();
+//    if (calendarController.isSelected(startDate)) { selectedDayEvents=dayEvents[calendarController.selectedDay];
+//    if(selectedDayEvents.isEmpty){
+//      setState(() {
+//      selectedDayEvents;print(selectedDayEvents);
+//    });
+//    }
+//    }
+//                      _dayEvent = null;
+
+  }
+
+
+  getStartTime(var a) {
+    NewEvent user = NewEvent.fromJson(a);
+    var startTime = DateFormat.jm().format(DateTime.parse(user.startDate));
+    return startTime;
+  }
 }
+
+
 //                  print(dayEvents);
 ////                  dayEvents=[(dayEvents.keys,dayEvents)];
 //                  print(selectedDayEvents);

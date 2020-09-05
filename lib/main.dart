@@ -55,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     Colors.blueGrey.shade400,
     Colors.blueGrey.shade500,
   ];
-
+  double endVal = 0.0;
   final _pageController = PageController(initialPage: 0, keepPage: true);
 
   switchPage() {
@@ -91,37 +91,51 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    //
     super.initState();
-//    eTitleController = TextEditingController();
+    mainController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
+//resized?mainController.forward():mainController.reverse();
     calendarController = CalendarController();
     dayEvents = {};
     selectedDayEvents = [];
-
     switchPage();
+//    mainController = AnimationController(vsync: this, duration: duration,animationBehavior: AnimationBehavior.normal,)..forward();
+//mainAnimation=Tween(begin: 0.0, end: 16.0).animate(CurvedAnimation(parent: mainController, curve: Curves.easeIn, reverseCurve: Curves.easeOut))..addStatusListener(
+//        (AnimationStatus status) {
+////          if(status==AnimationStatus.completed){
+////            mainController.reverse();
+////          }
+////          else if(status==AnimationStatus.dismissed){
+////            mainController.forward();
+////          }
+//          switch (status) {
+//            case AnimationStatus.completed:
+//              mainController.reverse();
+//              break;
+//            case AnimationStatus.dismissed:
+//              mainController.forward();
+//              break;
+//            case AnimationStatus.forward:
+//              break;
+//            case AnimationStatus.reverse:
+//              break;
+//          }
+//
+//});
+//    animation = Tween(begin: 0, end: 1.0).animate(CurvedAnimation(parent: controller, curve: Interval(0.0, 0.5)));
 //    _retrieveCalendars();
   }
 
   @override
   void dispose() {
-    //
     super.dispose();
-
     calendarController.dispose();
     _pageController.dispose();
+    mainController.dispose();
   }
-
-//  @override
-//  void deactivate() {
-//    //
-//    super.deactivate();
-//  }
-
 
   @override
   Widget build(BuildContext context) {
-//    appbar(context);
-//    Size size =MediaQuery.of(context).size;
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
 
@@ -136,6 +150,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 //        ViewDayEvents(),
       ],
     );
+    resized ? mainController.reverse() : mainController.forward();
     return Scaffold(
       resizeToAvoidBottomInset: true,
       resizeToAvoidBottomPadding: true,
@@ -154,14 +169,27 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         child: Stack(
           children: <Widget>[
             menu(context),
-            AnimatedPositioned(
-              duration: Duration(seconds: 1),
-              top: resized ? 0 : 0.2 * screenHeight,
-              bottom: resized ? 0 : screenWidth * 0.2,
-              left: resized ? 0 : screenWidth * 0.6,
-              right: resized ? 0 : screenWidth * -0.4,
-              curve: Curves.easeIn,
-              child: pageView,
+            AnimatedBuilder(
+              builder: (context, child) {
+                return child;
+              },
+              animation: mainAnimation = RelativeRectTween(
+                begin: new RelativeRect.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                end: new RelativeRect.fromLTRB(screenWidth * 0.6,
+                    screenWidth * 0.2, screenWidth * -0.4, screenWidth * 0.2),
+              ).animate(CurvedAnimation(
+                  parent: mainController, curve: Curves.easeInOut))
+                ..addStatusListener((AnimationStatus status) {
+//              if (status == AnimationStatus.completed&&resized==true) {
+//                                      mainController.reverse();
+//                                 } else if (status == AnimationStatus.dismissed&&resized==false) {
+//                                   mainController.forward();
+//                                 }
+                }),
+              child: PositionedTransition(
+                rect: mainAnimation,
+                child: pageView,
+              ),
             ),
           ],
         ),
@@ -196,6 +224,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     onPressed: () {
                       setState(() {
                         resized = !resized;
+//                        selected=!resized;
+//                        resized==true?selected=true:selected=false;
                       });
                     }),
               ),
@@ -352,43 +382,41 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 
   Widget body(context) {
-    return AnimatedContainer(
-      duration: Duration(seconds: 2),
-      curve: Curves.easeInOut,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(resized ? 0 : 16),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(resized ? 0 : 16),
+      child: Container(
         color: Theme
             .of(context)
             .primaryColor,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          appbar(context),
-          AnimatedSwitcher(
-            transitionBuilder: (Widget child, Animation<double> animation) {
-              final offsetAnimation = Tween<Offset>(
-                  begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0))
-                  .animate(animation);
-              return SlideTransition(
-                position: offsetAnimation,
-                child: FadeTransition(opacity: animation, child: child),
-              );
-            },
-            layoutBuilder: (currentChild, previousChildren) {
-              return currentChild;
-            },
-            switchInCurve: Curves.easeInOut,
-            switchOutCurve: Curves.easeInOut,
-            duration: Duration(seconds: 3),
-
-            child: switchWidget == 1 ? MyBody() : switchPage(),
+        child: Wrap(
+          direction: Axis.horizontal,
+//          mainAxisAlignment: MainAxisAlignment.start,
+//          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            appbar(context),
+            AnimatedSwitcher(
+              transitionBuilder: (Widget child, Animation<double> animation) {
+                final offsetAnimation = Tween<Offset>(
+                    begin: Offset(0.0, 1.0), end: Offset(0.0, 0.0))
+                    .animate(animation);
+                return SlideTransition(
+                  position: offsetAnimation,
+                  child: child,
+                );
+              },
+//              layoutBuilder: (currentChild, previousChildren) {
+//                return currentChild;
+//              },
+              switchInCurve: Curves.easeInOut,
+              switchOutCurve: Curves.easeInOut,
+              duration: Duration(seconds: 3),
+              child: switchWidget == 1 ? MyBody() : switchPage(),
 //                  (() {
 //                    switchPage()
 //                  }()),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }

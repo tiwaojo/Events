@@ -14,6 +14,10 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: MediaQuery
+          .of(context)
+          .size
+          .height,
       child: Column(
         children: <Widget>[
           Consumer<ThemeNotifier>(builder: (context, notifier, child) {

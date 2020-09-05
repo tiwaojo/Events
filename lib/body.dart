@@ -14,7 +14,6 @@ class MyBody extends StatefulWidget {
 }
 
 class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
-
   @override
   void initState() {
     super.initState();
@@ -22,21 +21,24 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
     opacityController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
-    );
+    )
+      ..forward();
     slideAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
-    );
+    )
+      ..forward();
     slideAnimation =
         Tween<Offset>(begin: Offset(0.0, 0.7), end: Offset(0.0, 0.0))
             .animate(slideAnimationController);
-    animation = CurvedAnimation(
-        parent: opacityController,
-        curve: Curves.easeIn,
-        reverseCurve: Curves.easeOut);
+//    animation = CurvedAnimation(
+//        parent: opacityController,
+//        curve: Curves.easeIn,
+//        reverseCurve: Curves.easeOut);
 
     rotateController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
+        vsync: this, duration: const Duration(milliseconds: 500))
+      ..forward();
     rotateAnimation = Tween(begin: 0.5, end: 1.0).animate(CurvedAnimation(
         parent: rotateController,
         curve: Curves.easeIn,
@@ -44,21 +46,43 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
             .easeOut)); //..addStatusListener((AnimationStatus status) {selected?animationController.reverse():animationController.forward(); });
 //  posAnimation =CurvedAnimation(parent: animationController2, curve: Curves.easeOut);
 //    animation = Tween(begin: 0.0, end: 1.0).animate(animationController1);
-    opacityController.forward();
-    slideAnimationController.forward();
-    rotateController.forward();
+
+    bodyController = AnimationController(
+        vsync: this,
+        duration: duration,
+        animationBehavior: AnimationBehavior.normal)
+      ..forward();
+
+//orderedSelectedDay();
+//    mainAnimation=Tween(begin: 0.0,end: 16.0).animate(CurvedAnimation(parent: mainController, curve: Curves.linearToEaseOut))..addStatusListener((AnimationStatus status) {
+//      if(status==AnimationStatus.completed){mainController.reverse();}
+//    });
+//    animation = Tween(begin: 0, end: 300).animate(controller)
+//      ..addListener(() {
+//        setState(() {});
+//      })
+//      ..addStatusListener((status) {
+//        if (status == AnimationStatus.completed) {
+//          controller.reverse();
+//        } else if (status == AnimationStatus.dismissed) {
+//          controller.forward();
+//        }
+//      });
+//    animation = Tween(begin: 0, end: 1.0).animate(CurvedAnimation(parent: controller, curve: Interval(0.0, 0.5)));
+
 //  animationController1.reverse();
   }
 
   @override
   void dispose() {
+    super.dispose();
     slideAnimationController.dispose();
     opacityController.dispose();
     rotateController.dispose();
-    super.dispose();
+    bodyController.dispose();
   }
 
-  void initPrefs() async {
+  initPrefs() async {
     eventPrefs = await SharedPreferences.getInstance();
     setState(() {
       dayEvents = Map<DateTime, List<dynamic>>.from(
@@ -66,12 +90,41 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
     });
   }
 
+//  var _eventListHt=0.6;
   @override
   Widget build(BuildContext context) {
     var _color = Colors.black;
-//    double _angle = pi;
-//    Widget _myDayEvents = displayEvents(context);
+
+//    Widget _myDayEvents=displayRangedEvents(context);
+//selectedDayEvents.length=1;
+
+    AnimatedSwitcher eventDisplaySwitcher = AnimatedSwitcher(
+        duration: duration,
+//        transitionBuilder: (Widget child, Animation<double> animation) {
+//          final offsetAnimation =
+//          Tween<Offset>(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0))
+//              .animate(animation);
+//          return SlideTransition(
+//            position: offsetAnimation,
+//            child: FadeTransition(opacity: animation, child: child),
+//          );
+//        },
+//        layoutBuilder: (currentChild, previousChildren) {
+//          return currentChild;
+//        },
+        switchInCurve: Curves.easeInOut,
+        switchOutCurve: Curves.easeInOut,
+        child: selectedDayEvents.isEmpty
+            ? displayEvents(context)
+            : displayRangedEvents(context));
     tableCalendar = TableCalendar(
+//      onCalendarCreated: (first, last, format) {
+//      setState(() {
+////        calendarController.setFocusedDay(calendarController.selectedDay);
+//      _myDayEvents=displayRangedEvents(context);
+//      });
+//    },
+      rowHeight: 40,
       calendarController: calendarController,
       initialCalendarFormat: CalendarFormat.month,
       events: dayEvents,
@@ -80,6 +133,11 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
       formatAnimation: FormatAnimation.slide,
       initialSelectedDay: currentDate,
       headerVisible: true,
+      onHeaderTapped: (focusedDay) {
+        setState(() {
+          calendarController.setFocusedDay(currentDate);
+        });
+      },
       calendarStyle: CalendarStyle(
         weekdayStyle: TextStyle(
             fontFamily: "Phenomena", fontSize: 16, color: Colors.pink),
@@ -93,17 +151,17 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
         markersColor: Colors.blue,
         markersMaxAmount: 1,
         markersPositionLeft: 22,
-//        contentPadding: EdgeInsets.only(top: 10),
+        contentPadding: EdgeInsets.only(left: 20, right: 20, bottom: 5),
         outsideDaysVisible: false,
       ),
       headerStyle: HeaderStyle(
-//        formatButtonShowsNext: true,
+        formatButtonShowsNext: true,
         formatButtonVisible: false,
-        titleTextStyle: Theme.of(context).textTheme.headline4,
-//            TextStyle(
-//                fontFamily: "Phenomena",
-//                fontSize: 30,
-//                color: Colors.pink),
+        titleTextStyle: Theme
+            .of(context)
+            .textTheme
+            .headline4,
+
       ),
       daysOfWeekStyle: DaysOfWeekStyle(
           dowTextBuilder: (date, locale) {
@@ -121,12 +179,16 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
 //              weekdayStyle:WeekdayFormat.short,
       ),
       onDaySelected: (day, events) {
+        selectedDayEvents = events;
         setState(() {
-          selectedDayEvents = events;
-//        selectedDayEvents.isEmpty
-//            ? displayEvents(context)
-//            : displayRangedEvents(context);
-////          eventDisplay
+          orderedSelectedDay();
+//          print(selectedDayEvents);
+//          if(selectedDayEvents.isNotEmpty){
+//          _myDayEvents=displayRangedEvents(context);}else{_myDayEvents=displayEvents(context);}
+//
+////          displayRangedEvents(context);
+////          eventDisplaySwitcher;
+//
         });
       },
       builders: CalendarBuilders(
@@ -198,188 +260,116 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
         },
       ),
     );
-    AnimatedSwitcher eventDisplaySwitcher = AnimatedSwitcher(
-        duration: Duration(seconds: 2),
-        transitionBuilder: (Widget child, Animation<double> animation) {
-          final offsetAnimation =
-          Tween<Offset>(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0))
-              .animate(animation);
-          return SlideTransition(
-            position: offsetAnimation,
-            child: FadeTransition(opacity: animation, child: child),
-          );
+    return
+      AnimatedBuilder(
+        animation: rotateAnimation,
+        builder: (context, child) {
+          return child;
         },
-        layoutBuilder: (currentChild, previousChildren) {
-          return currentChild;
-        },
-        switchInCurve: Curves.easeInOut,
-        switchOutCurve: Curves.easeInOut,
-        child: (selectedDayEvents.isEmpty)
-            ? displayEvents(context)
-            : displayRangedEvents(context));
-    return AnimatedContainer(
-      duration: duration,
-      curve: Curves.easeInOut,
-      height: MediaQuery
-          .of(context)
-          .size
-          .height -
-          (MediaQuery
+        child:
+        Container(
+
+//        duration: duration,
+//        curve: Curves.easeInOut,
+          height: MediaQuery
               .of(context)
               .size
-              .height * 0.13125),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.black,
-            Theme
-                .of(context)
-                .primaryColor,
-          ],
-          begin: FractionalOffset.bottomCenter,
-          end: FractionalOffset.topCenter,
-          stops: <double>[
-            selected ? 0.22 : 0.4,
-            0.9,
-          ],
-        ),
-        backgroundBlendMode: BlendMode.srcATop,
-      ),
-      child: Stack(
-//        shrinkWrap: false,
-//        mainAxisSize: MainAxisSize.max,
-//        verticalDirection: VerticalDirection.down,
-
-        children: <Widget>[
-//                Appbar(context),
-          eventDisplaySwitcher,
-//          SizedBox(
-//            height: 30,
-//          ),
-//          AnimatedCrossFade(
-////          turns: selected?animation:null,
-//            firstChild: Bounce(
-//              child: IconButton(
-//                alignment: Alignment.center,
-//                icon: Icon(
-//                  Icons.expand_more,
-//                  size: 48,
-//                  color: Colors.amber,
-//                ),
-//                onPressed: () {
-//                  selected = !selected;
-//
-//                  setState(() {
-////                  animationController2.reverse();
-////                  animationController1.reverse();
-//                    calendarController.setCalendarFormat(CalendarFormat.week);
-//                  });
-//                },
-//              ),
-//              infinite: true,
-//              duration: Duration(seconds: 1),
-//              delay: Duration(seconds: 1),
-//              animate: true,
-//              from: 10,
-//            ),
-//            duration: Duration(seconds: 2),
-//            crossFadeState:
-//            selected ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-//            alignment: Alignment.center,
-//            firstCurve: Curves.bounceIn,
-//            reverseDuration: Duration(seconds: 1),
-//            secondCurve: Curves.bounceOut,
-//            sizeCurve: Curves.easeIn,
-//            secondChild: Bounce(
-//              child: IconButton(
-//                alignment: Alignment.center,
-//                icon: Icon(
-//                  Icons.expand_less,
-//                  size: 48,
-//                  color: Colors.amber,
-//                ),
-//                onPressed: () {
-//                  selected = !selected;
-
-//                  setState(() {
-////                  animationController2.reverse();
-////                  animationController1.reverse();
-//                    if (selected) {
-//                      calendarController
-//                          .setCalendarFormat(CalendarFormat.twoWeeks);
-//                    } else {
-//                      calendarController.setCalendarFormat(
-//                          CalendarFormat.month);
-//                    }
-//                  });
-//                },
-//              ),
-//              infinite: true,
-//              duration: Duration(seconds: 2),
-//              delay: Duration(seconds: 1),
-//              animate: true,
-//              from: 10,
-//            ),
-//          ),
-
-
-          Column(mainAxisAlignment: MainAxisAlignment.end,
-            children: [ RotationTransition(
-              turns: rotateAnimation,
-//            duration: Duration(seconds: 2),
-//            transform: Matrix4.rotationX(selected ? pi : 0),
-              alignment: Alignment.center,
-//            curve: Curves.easeInOut,
-//                          curve: Curves.easeInOutQuint,
-              child: Bounce(
-                child: IconButton(
-                  alignment: Alignment.centerLeft,
-                  icon: Icon(
-                    Icons.expand_more,
-                    size: 40,
-                    color: Colors.amber,
-                  ),
-                  onPressed: () {
-                    setState(() {
-//                  animationController2.reverse();
-//                  animationController1.reverse();
-                      selected = !selected;
-//animationController.reverse();
-                      selected
-                          ? rotateController.reverse()
-                          : rotateController.forward();
-                      selected
-                          ? calendarController
-                          .setCalendarFormat(CalendarFormat.week)
-                          : calendarController
-                          .setCalendarFormat(CalendarFormat.month);
-//                      main();
-                    });
-                  },
-                ),
-                infinite: true,
-                duration: Duration(seconds: 1),
-                delay: Duration(seconds: 1),
-                animate: true,
-                from: 10,
-              ),
+              .height -
+              (MediaQuery
+                  .of(context)
+                  .size
+                  .height * 0.13125),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.black,
+                Theme
+                    .of(context)
+                    .primaryColor,
+              ],
+              begin: FractionalOffset.bottomCenter,
+              end: FractionalOffset.topCenter,
+              stops: <double>[
+                selected ? 0.22 : 0.4,
+                0.9,
+              ],
             ),
-              SlideTransition(
-                position: slideAnimation,
-                child: FadeTransition(
-                    opacity: opacityController, child: tableCalendar),
+            backgroundBlendMode: BlendMode.srcATop,
+          ),
+          child: Stack(
+            children: <Widget>[
+              eventDisplaySwitcher,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  RotationTransition(
+                    turns: rotateAnimation,
+                    alignment: Alignment.center,
+                    child: Bounce(
+                      child: Center(child: moreEventsList(context)),
+                      infinite: true,
+                      duration: Duration(seconds: 1),
+                      delay: Duration(seconds: 1),
+                      animate: true,
+                      from: 10,
+                    ),
+                  ),
+//    AnimatedBuilder(
+//      animation: ,
+//      builder: (context, child) {
+//
+//    },
+//      child: SlideTransition(
+//                position: slideAnimation,
+//                child: FadeTransition(
+//                    opacity: opacityController, child:  tableCalendar)),
+//    ),
+//          Tween
+//                Visibility(
+//                  maintainAnimation: false,
+//                  maintainInteractivity: false,
+//                  visible: visibility,
+                  GestureDetector(
+                      onVerticalDragStart: (details) {
+                        setState(() {
+//                                if (selected == true) {
+//                      visibility = false;
+//                      _eventListHt=0.8;
+//                                }
+                          selected = !selected;
+                          selected
+                              ? rotateController.reverse()
+                              : rotateController.forward();
+
+                          selected
+                              ? calendarController.setCalendarFormat(
+                              CalendarFormat.week)
+                              : calendarController.setCalendarFormat(
+                              CalendarFormat.month);
+                        });
+                      },
+                      dragStartBehavior: DragStartBehavior.start,
+                      child:
+                      tableCalendar
+                  ),
+//                )
+                ],
               ),
             ],
           ),
-        ],
-      ),
-    );
+        ),
+      );
   }
 
+
   Widget displayEvents(context) {
-    return Container(alignment: Alignment.topCenter,
+    return Container(
+      alignment: Alignment.topCenter,
+      margin: EdgeInsets.only(top: 40),
       child: Text(
-        "No Events on ", textAlign: TextAlign.center,
+        "No Events",
+        textAlign: TextAlign.center,
         style: TextStyle(
           fontFamily: "Phenomena",
           fontSize: 50,
@@ -392,62 +382,129 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
   Widget displayRangedEvents(context) {
     int numDayEvents = selected ? selectedDayEvents.length : 3;
     return Container(
-      foregroundDecoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Theme
-                .of(context)
-                .primaryColor
-                .withOpacity(0.01), // Colors.black.withOpacity(0.9),
-            Theme
-                .of(context)
-                .primaryColor
-                .withOpacity(0.2),
-          ],
-          begin: FractionalOffset.bottomCenter,
-          end: FractionalOffset.topCenter,
-          stops: <double>[
-            selected ? 0.1 : 0.0,
-            0.4,
-          ],
-        ),
-      ),
-//      height: selected ? MediaQuery.of(context).size.height * 0.5 : MediaQuery.of(context).size.height * 0.2,
+//        foregroundDecoration: BoxDecoration(
+//    gradient: LinearGradient(
+//    colors: [
+//    Theme.of(context).primaryColor.withOpacity(0.01), // Colors.black.withOpacity(0.9),
+//    Theme.of(con    text).primaryColor.withOpacity(0.2),
+//    ],
+//    begin: FractionalOffset.bottomCenter,
+//    end: FractionalOffset.topCenter,
+//    stops: <double>[
+//    selected ? 0.1 : 0.0,
+//    0.4,
+//    ],
+//    ),
+//    ),
+      height: selected
+          ? MediaQuery
+          .of(context)
+          .size
+          .height * 0.6
+          : MediaQuery
+          .of(context)
+          .size
+          .height * 0.3,
       child: ListView(
-        shrinkWrap: true,
+//      shrinkWrap: true,
         physics: BouncingScrollPhysics(),
         dragStartBehavior: DragStartBehavior.start,
         primary: true,
+        padding: EdgeInsets.zero,
 //      verticalDirection: VerticalDirection.down,mainAxisSize: ,
         children: <Widget>[
-          ...selectedDayEvents.getRange(0,
+          ...selectedDayEvents
+              .getRange(
+              0,
               selectedDayEvents.length >= numDayEvents
                   ? numDayEvents
-                  : selectedDayEvents.length).map(
+                  : selectedDayEvents.length)
+              .map(
                 (event) {
               NewEvent user = NewEvent.fromJson(event);
 
-              var date1 = DateFormat.jm().format(
-                  DateTime.parse(user.startDate));
+              var date1 =
+              DateFormat.jm().format(DateTime.parse(user.startDate));
               var date2 = DateFormat.jm().format(DateTime.parse(user.endDate));
 
               return FadeIn(
                 animate: true,
-                /*                delay: Duration(milliseconds: 1500),*/
-                duration: Duration(seconds: 2),
+                duration: Duration(milliseconds: 1000),
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: EventCards(user.title, date1, date2, user.description),
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Container(
+                      decoration: isEventNow(user.startDate, user.endDate)
+                          ? BoxDecoration(
+                          color: Theme
+                              .of(context)
+                              .primaryColor,
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(8)))
+                          : null,
+                      child: EventCards(title: user.title,
+                        startDate: date1,
+                        endDate: date2,
+                        description: user.description,)),
                 ),
-
               );
             },
-          ).toList(), /*          }), ),*/
+          ).toList(),
         ],
       ),
-    ); /*      return LimitedBox(maxHeight: 200,maxWidth: MediaQuery.of(context).size.width, child: Hero(tag: "events", child: ListView.builder(itemCount: selectedDayEvents.length>=3?3:selectedDayEvents.length,itemBuilder: (context, index) { var user = NewEvent.fromJson(selectedDayEvents[index]); print(user.toJson()); print(user.title); //  selectedDayEvents.forEach((element) {print(element);}); return FadeIn( animate: true, delay: Duration(milliseconds: 1500), duration: Duration(seconds: 2), child: Card(elevation:2 ,color: Colors.blueGrey,shadowColor: Colors.green, child: ExpansionTile( title: Text(user.title), subtitle: Text(user.startDate), ), ), ); },), ), ); setState(() { selectedDayEvents.forEach((element) { var user = NewEvent.fromJson(element); print(user.toJson());}); selectedDayEvents.map((events) { //          print(selectedDayEvents); //          var user = NewEvent.fromJson(events); //          print(user.title); //          print(user.startDate); //          print(user.endDate); //          print(user.description); var user = NewEvent.fromJson(events); //            var user=  json.decode(jsonDecode(selectedDayEvents[0])); //    print(user.toJson()); //    print(user.title); setState(() { return FadeIn( animate: true, delay: Duration(milliseconds: 1500), duration: Duration(seconds: 2), child: Hero(tag: "events", child: Card( elevation: 8, child: ListTile( title: Text(user.title), trailing: IconButton( icon: Icon(MdiIcons.delete), color: Colors.pinkAccent, onPressed: () { setState(() { dayEvents.remove(0); selectedDayEvents.removeLast(); print(selectedDayEvents); print(dayEvents); }); }, ), ), ), ), ); //    }); }); });*/
+    );
   }
+
+  Widget moreEventsList(context) {
+    return IconButton(
+      alignment: Alignment.centerLeft,
+      icon: Icon(
+        Icons.expand_more,
+        size: 40,
+        color: Colors.amber,
+      ),
+      onPressed: () {
+        setState(() {
+          selected = !selected;
+          selected ? rotateController.reverse() : rotateController.forward();
+
+          selected
+              ? calendarController.setCalendarFormat(CalendarFormat.week)
+              : calendarController.setCalendarFormat(CalendarFormat.month);
+
+//          visibility=true;
+//          _eventListHt=0.6;
+//          visibility==true ? rotateController.reverse() : rotateController.forward();
+//                      main();
+        });
+      },
+    );
+  }
+
+  bool isEventNow(String startDate, String endDate,) {
+    //method to determine and allow for UI decoration based on if the event/events are already happening
+// Future<bool>result= Future.delayed(duration,(){
+    if (currentDate.isBefore(DateTime.parse(startDate)) == false &&
+        currentDate.isAfter(DateTime.parse(endDate)) == false) {
+//      print("$currentDate is after $startDate");
+      return true;
+    } else {
+      return false;
+    }
+//  });
+// return result;
+  }
+
+
 }
+//    future <bool> isEventNow(String startDate, String endDate,){
+//    //method to determine and allow for UI decoration based on if the event/events are already happening
+// Future<bool>result= Future.delayed(duration,(){
+//   if(currentDate.isBefore(DateTime.parse(startDate))==false && currentDate.isAfter(DateTime.parse(endDate))==false){
+//     print("$currentDate is after $startDate");   return true;}
+//   else{ print("time is not for event"); return false;}
+//  });
+// return result;
+//    }
 //        Card( margin: EdgeInsets.all(20), elevation: 10, borderOnForeground: false, shadowColor: Colors.blue, semanticContainer: false, shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(15), ), child: Theme( data: Theme.of(context).copyWith( cardColor: Color.fromRGBO(24, 34, 49, 100), dividerColor: Colors.transparent, dividerTheme: DividerThemeData(thickness: 23, space: 20), cardTheme: CardTheme( //                    margin: EdgeInsets.all(6), elevation: 3, shadowColor: Colors.amber, //                    shape: RoundedRectangleBorder( //                        borderRadius: BorderRadius.circular(15)), ), //              textTheme: , ), isMaterialAppTheme: true, child: ExpansionPanelList( animationDuration: Duration(seconds: 1), expansionCallback: (int index, bool isExpanded) { setState( () { _currentDayEvent[index].isExpanded = !_currentDayEvent[index].isExpanded; }, ); }, children: _currentDayEvent.map<ExpansionPanel>( (CurrentEvent currentEvent) { return ExpansionPanel( headerBuilder: (BuildContext context, bool isExpanded) { return ClipRRect( borderRadius: BorderRadius.circular(20), //                          ClipRRect( //                            borderRadius: BorderRadius.circular(20), child: Text("data"), //                          ListTile(isThreeLine: false, //                            contentPadding: EdgeInsets.all(3.0), //                            leading: Container( //                              padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0), ////                                decoration: BoxDecoration( ////                                    border: Border( ////                                        left: BorderSide( ////                                            width: 3.0, color: Colors.white54))), //                              child: Icon( //                                Icons.account_circle, //                                size: 30.0, //                                color: Colors.black, //                              ), //                            ), //                            title: ListTile( //                              contentPadding: EdgeInsets.all(0.0), //                              title: Text( //                                currentEvent.header, //                                style: TextStyle( //                                  color: Colors.black, //                                  fontSize: 14.0, //                                ), //                              ), //                            ), //                          ), ); //                          return Container( ////                            color:Colors.blue, //                            alignment: Alignment.center, //                            //decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: Colors.blue), //                            child: Text( //                              currentEvent.header, //                              style: textStyle1, //                            ), //                          ); }, isExpanded: currentEvent.isExpanded, canTapOnHeader: true, body: Container( color: Colors.blue, child: Text( currentEvent.body, style: Theme.of(context).textTheme.headline2, textAlign: TextAlign.left, ), ), ); }, ).toList(), expandedHeaderPadding: EdgeInsets.all(0.0), ), ), ), Container( child: Center( child: AnimatedIcon( icon: AnimatedIcons.add_event, progress: globals.animationController1, color: Colors.pinkAccent, ), ), ), Container( margin: EdgeInsets.symmetric(horizontal: 50.0), child: Column( children: <Widget>[ Container( alignment: Alignment.bottomCenter, //                  height: 100, //                  color: Colors.black, child: Row( mainAxisAlignment: MainAxisAlignment.spaceBetween, //                      mainAxisSize: MainAxisSize.max, children: <Widget>[ Hero(tag:"currentMonth",transitionOnUserGestures: true, child: GestureDetector(onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>Menu())); }, child: Padding( padding: const EdgeInsets.only(left:10.0), child: Text( globals.currentMonth, style: TextStyle( fontFamily: "Phenomena", fontWeight: FontWeight.bold, fontSize: 24.0, color: CSSColors.deepPink), ), ), ), ), Row( children: <Widget>[ IconButton( icon: Icon(Icons.chevron_left, size: 20), tooltip: globals.prevMonth, color: Colors.pink, iconSize: 15, onPressed: () { setState(() { globals.targetDateTime = DateTime( globals.targetDateTime.year, globals.targetDateTime.month - 1); globals.currentMonth = DateFormat.yMMM().format(globals.targetDateTime);
 //                              print(globals.currentMonth =
 //                                  DateFormat.MMMM().format(globals.targetDateTime));
@@ -763,3 +820,5 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
 ////                  child:
 ////
 ////                  ),
+/*      return LimitedBox(maxHeight: 200,maxWidth: MediaQuery.of(context).size.width, child: Hero(tag: "events", child: ListView.builder(itemCount: selectedDayEvents.length>=3?3:selectedDayEvents.length,itemBuilder: (context, index) { var user = NewEvent.fromJson(selectedDayEvents[index]); print(user.toJson()); print(user.title); //  selectedDayEvents.forEach((element) {print(element);}); return FadeIn( animate: true, delay: Duration(milliseconds: 1500), duration: Duration(seconds: 2), child: Card(elevation:2 ,color: Colors.blueGrey,shadowColor: Colors.green, child: ExpansionTile( title: Text(user.title), subtitle: Text(user.startDate), ), ), ); },), ), ); setState(() { selectedDayEvents.forEach((element) { var user = NewEvent.fromJson(element); print(user.toJson());}); selectedDayEvents.map((events) { //          print(selectedDayEvents); //          var user = NewEvent.fromJson(events); //          print(user.title); //          print(user.startDate); //          print(user.endDate); //          print(user.description); var user = NewEvent.fromJson(events); //            var user=  json.decode(jsonDecode(selectedDayEvents[0])); //    print(user.toJson()); //    print(user.title); setState(() { return FadeIn( animate: true, delay: Duration(milliseconds: 1500), duration: Duration(seconds: 2), child: Hero(tag: "events", child: Card( elevation: 8, child: ListTile( title: Text(user.title), trailing: IconButton( icon: Icon(MdiIcons.delete), color: Colors.pinkAccent, onPressed: () { setState(() { dayEvents.remove(0); selectedDayEvents.removeLast(); print(selectedDayEvents); print(dayEvents); }); }, ), ), ), ), ); //    }); }); });*/
+/*          }), ),*/

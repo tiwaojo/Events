@@ -12,6 +12,11 @@ final ThemeData light = ThemeData(
       fontSize: 16,
       color: Color(0xFFFF3366),
     ),
+    headline3: TextStyle(
+      fontFamily: "Phenomena",
+      fontSize: 14,
+      color: Color(0xFFFF3366),
+    ),
     headline4: TextStyle(
       fontFamily: "Phenomena",
 //      fontSize: 30,

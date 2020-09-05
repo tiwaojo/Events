@@ -17,30 +17,34 @@ export 'package:shared_preferences/shared_preferences.dart';
 export 'package:table_calendar/table_calendar.dart';
 
 final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
-Animation<double> animation, rotateAnimation;
-Animation<Offset> slideAnimation;
-Animation<RelativeRect> posAnimation;
+Animation<double> rotateAnimation, eListAnimation;
+Animation<Offset> slideAnimation, offsetAnimation;
+Animation<RelativeRect> mainAnimation, posAnimation;
 //Animation<DecoratedBox>decBoxAnimation;
 AnimationController opacityController,
     slideAnimationController,
+    mainController,
+    bodyController,
+    eListController,
     rotateController; //,decBoxAnimationController;
-//final paddingTween=EdgeInsetsTween(begin: Edge,)
 
 String currentMonth = DateFormat.MMMM().format(DateTime.now());
+TableCalendar tableCalendar;
 //DateTime eventDateTime = DateTime.now().add(Duration(days: 1));//DateTime(2020, 6, 8);
 //DateTime targetDateTime = DateTime(2020, 6, 8);
 DateTime currentDate = DateTime.now();
 DateTime startDate = DateTime.now();
 DateTime endDate = DateTime.now().add(Duration(days: 1));
-TableCalendar tableCalendar;
+
 bool modalOpen = false;
 bool resized = true;
 bool selected = false;
 int switchWidget = 1;
-var scale = slideAnimationController;
+//var scale = slideAnimationController;
 bool menuGradient = false;
 double decorGradient = 0.25;
 Duration duration = Duration(seconds: 2);
+//bool visibility = true;
 //void showToast(BuildContext context) {
 //  final scaffold = Scaffold.of(context);
 //  scaffold.showSnackBar(
@@ -55,7 +59,7 @@ Duration duration = Duration(seconds: 2);
 //}
 
 //double infinHeight=double.infinity;
-//bool visibility = false;
+
 //double opacity = 0.0;
 
 //String nextMonth = DateFormat.MMMM()
@@ -144,7 +148,36 @@ class NewEvent {
     return NewEvent(
         json['title'], json['startDate'], json['endDate'], json['description']);
   }
+
 //  NewEvent.withoutDescription(this.title,this.startDate,this.endDate){
 //    this.startDate = currentDate;
 //    this.endDate = currentDate.add(Duration(days: 1));
+}
+
+void orderedSelectedDay() {
+  if (selectedDayEvents.isNotEmpty && selectedDayEvents.length > 1) {
+    for (int i = 0; i < selectedDayEvents.length - 1; i++) {
+      for (int j = 0; j < selectedDayEvents.length - i - 1; j++) {
+        NewEvent user1 = NewEvent.fromJson(selectedDayEvents.elementAt(j));
+        NewEvent user2 = NewEvent.fromJson(selectedDayEvents.elementAt(1 + j));
+        var time1 = DateTime.parse(user1.startDate);
+        var time2 = DateTime.parse(user2.startDate);
+        if (time2.isBefore(time1)) {
+          //remove and replace the first time with the preceeding one and vice versa
+          selectedDayEvents.removeAt(j);
+          selectedDayEvents.insert(j, user2.toJson());
+          selectedDayEvents.removeAt(1 + j);
+          selectedDayEvents.insert(1 + j, user1.toJson());
+          print('$time1 > $time2');
+//print("${i++}");
+        }
+//        else {
+//          return;
+//        }
+      }
+    }
+//    selectedDayEvents.sort((a,b)=>a.startDate.compareTo(b.startDate));
+
+//      print("No events");
+  }
 }
