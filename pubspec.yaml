@@ -61,8 +61,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - images/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -93,7 +93,12 @@ flutter:
         - asset: fonts/Phenomena-Regular.ttf
         - asset: fonts/Phenomena-Bold.ttf
           weight: 300
+        - asset: fonts/Phenomena-Black.ttf
+        - asset: fonts/Phenomena-ExtraBold.ttf
+        - asset: fonts/Phenomena-ExtraLight.ttf
         - asset: fonts/Phenomena-Light.ttf
+          weight: 200
+        - asset: fonts/Phenomena-Thin.ttf
     - family: appicons
       fonts:
         - asset: icons/appicons.ttf

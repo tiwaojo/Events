@@ -1,4 +1,3 @@
-//import 'package:events_globals/events_globals.dart';
 import 'package:events/globals.dart';
 
 import 'custom_widgets.dart';
@@ -23,13 +22,15 @@ class _SettingsState extends State<Settings> {
           Consumer<ThemeNotifier>(builder: (context, notifier, child) {
             return SwitchListTile(
               value: notifier.darkTheme,
-              title: Text(notifier.darkTheme ? "DarkTheme" : "Light THeme"),
+              title: Text(
+                notifier.darkTheme ? "DarkTheme" : "Light Theme",
+                style: Theme.of(context).textTheme.headline5,
+              ),
               onChanged: (bool value) {
                 notifier.toggleTheme();
                 menuGradient = !menuGradient;
                 setState(() {
 //                          notifier.toggleTheme();
-
                   x = notifier.toggleTheme();
                   value = x;
                   print(notifier.toggleTheme());

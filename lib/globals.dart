@@ -1,12 +1,6 @@
 library globals;
 
-//export 'src/ScrollingYears.dart';
-//export 'src/main.dart';
-//export 'package:events/src/viewDayEvents.dart';
-//import 'dart:html';
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -16,82 +10,46 @@ export 'package:provider/provider.dart';
 export 'package:shared_preferences/shared_preferences.dart';
 export 'package:table_calendar/table_calendar.dart';
 
+//Key for the scaffold widget object
 final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
-Animation<double> rotateAnimation, eListAnimation;
+
+//Animation controllers and variables
+Animation<double> rotateAnimation, scaleAnimation;
 Animation<Offset> slideAnimation, offsetAnimation;
 Animation<RelativeRect> mainAnimation, posAnimation;
-//Animation<DecoratedBox>decBoxAnimation;
 AnimationController opacityController,
     slideAnimationController,
     mainController,
     bodyController,
-    eListController,
-    rotateController; //,decBoxAnimationController;
+    scaleController,
+    rotateController;
 
-String currentMonth = DateFormat.MMMM().format(DateTime.now());
+//DateTime and Calendar variables
 TableCalendar tableCalendar;
-//DateTime eventDateTime = DateTime.now().add(Duration(days: 1));//DateTime(2020, 6, 8);
-//DateTime targetDateTime = DateTime(2020, 6, 8);
 DateTime currentDate = DateTime.now();
 DateTime startDate = DateTime.now();
 DateTime endDate = DateTime.now().add(Duration(days: 1));
 
+// Constants to maintain states and values across multiple widgets
 bool modalOpen = false;
 bool resized = true;
 bool selected = false;
 int switchWidget = 1;
-//var scale = slideAnimationController;
 bool menuGradient = false;
 double decorGradient = 0.25;
-Duration duration = Duration(seconds: 2);
-//bool visibility = true;
-//void showToast(BuildContext context) {
-//  final scaffold = Scaffold.of(context);
-//  scaffold.showSnackBar(
-//    SnackBar(
-//      content: Text(
-//          'Event not added./n Event can not end before it has started.'),
-//      duration: Duration(seconds: 3),
-//      action: SnackBarAction(
-//          label: "Undo", onPressed: null),
-//    ),
-//  );
-//}
+Duration duration = const Duration(seconds: 2);
 
-//double infinHeight=double.infinity;
-
-//double opacity = 0.0;
-
-//String nextMonth = DateFormat.MMMM()
-//    .format(DateTime(targetDateTime.year, targetDateTime.month + 1));
-//String prevMonth = DateFormat.MMMM()
-//    .format(DateTime(targetDateTime.year, targetDateTime.month - 1));
-
-//void _showToast(BuildContext context) {
-//    final scaffold = Scaffold.of(context);
-//    scaffold.showSnackBar(
-//        SnackBar(
-//          content: Text(
-//              'Event not added./n Event can not end before it has started.'),
-//          duration: Duration(seconds: 3),
-//          action: SnackBarAction(
-//              label: "Undo", onPressed: null),
-//        ),
-//    );
-//}
-
-final eventListKey = GlobalKey<AnimatedListState>();
-
-//final eventDisplayWidget=GlobalKey<AnimatedSwi>();
-var eventIndex; //=selectedDayEvents.length >= 3 ? 3 : selectedDayEvents.length;
-
-CalendarController calendarController;
+//Map for all the events
 Map<DateTime, List<dynamic>> dayEvents;
+
+// Controllers for the form fields
+CalendarController calendarController;
 TextEditingController eTitleController;
 TextEditingController eDescrptionController;
+TextEditingController eSearchController;
+
 //a list of the dayEvents
 List<dynamic> selectedDayEvents;
-//List<NewEvent> someEventList;
 SharedPreferences eventPrefs;
 
 Map<String, dynamic> encodeMap(Map<DateTime, dynamic> map) {
@@ -121,7 +79,6 @@ class NewEvent {
   NewEvent(this.title, this.startDate, this.endDate, this.description);
 
   Map<String, dynamic> toJson() => {
-//   Map startDate = this.startDate != null ? this.startDate.toJson() : null;
 
 //    return {
         'title': this.title,
@@ -169,15 +126,24 @@ void orderedSelectedDay() {
           selectedDayEvents.removeAt(1 + j);
           selectedDayEvents.insert(1 + j, user1.toJson());
           print('$time1 > $time2');
-//print("${i++}");
         }
-//        else {
-//          return;
-//        }
       }
     }
-//    selectedDayEvents.sort((a,b)=>a.startDate.compareTo(b.startDate));
+  }
+}
 
-//      print("No events");
+bool isEventNow(
+  String startDate,
+  String endDate,
+) {
+  //method to determine and allow for UI decoration based on if the event/events are already happening
+// Future<bool>result= Future.delayed(duration,(){
+  if (currentDate.isBefore(DateTime.parse(startDate)) == false &&
+      currentDate.isAfter(DateTime.parse(endDate)) == false) {
+    //|| currentDate.isAtSameMomentAs(DateTime.parse(startDate))) {
+//      print("$currentDate is after $startDate");
+    return true;
+  } else {
+    return false;
   }
 }

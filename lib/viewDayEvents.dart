@@ -21,12 +21,12 @@ class _ViewDayEventsState extends State<ViewDayEvents> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         children: <Widget>[
-          Appbar(context),
+          Appbar(),
           ...selectedDayEvents
               .getRange(0,
                   selectedDayEvents.length >= 3 ? 3 : selectedDayEvents.length)
               .map(
-                (event) {
+            (event) {
               NewEvent user = json.decode(event);
 
               return Hero(
@@ -34,9 +34,7 @@ class _ViewDayEventsState extends State<ViewDayEvents> {
                 child: Card(
                   elevation: 5,
                   shadowColor: Colors.black,
-                  color: Theme
-                      .of(context)
-                      .primaryColor,
+                  color: Theme.of(context).primaryColor,
                   child: ListTile(
                     title: Text(
                       user.title,

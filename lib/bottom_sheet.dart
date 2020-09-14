@@ -84,56 +84,29 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
       autovalidate: true,
       key: _formKey,
       child: Container(
-//      color: Theme.of(context).backgroundColor,
+     // color: Theme.of(context).focusColor,
         margin: EdgeInsets.only(
           left: 10,
           right: 10,
-          top: 40,
+          top: 10,
         ),
         height: MediaQuery.of(context).viewInsets.bottom + 350.0,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(top: 10),
+              height: 4,
+              width: 25,
+              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-//              shape: BoxShape.circle,
                 color: Theme.of(context).backgroundColor,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12.withOpacity(0.5),
-                    blurRadius: 10.0,
-                    spreadRadius: 1.0,
-                    offset: Offset(
-                      0,
-                      0,
-                    ),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                controller: eTitleController,
-                autovalidate: true,
-                autocorrect: true,
-                autofocus: false,
-                expands: false,
-
-//                textInputAction: TextInputAction.continueAction,
-                maxLines: maxLength < 30 ? 1 : maxLines += 1,
-                enableSuggestions: true,
-                textCapitalization: TextCapitalization.sentences,
-                decoration: InputDecoration(hintText: "Title"),
-//                      scrollPadding: EdgeInsets.all(10),
-                cursorColor: Colors.pinkAccent,
-                cursorRadius: Radius.circular(12),
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .headline4,
+                borderRadius: BorderRadius.all(Radius.circular(20)),
               ),
             ),
 
+            TitleWidget(),
+
+            //Start/End for the events
             Container(
               padding: EdgeInsets.all(8),
               alignment: Alignment.centerRight,
@@ -144,7 +117,10 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text("Start"),
+                      Text("Start", style: Theme
+                          .of(context)
+                          .textTheme
+                          .subtitle1,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
@@ -256,7 +232,10 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text("End"),
+                      Text("End", style: Theme
+                          .of(context)
+                          .textTheme
+                          .subtitle1),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
@@ -351,38 +330,23 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
               ),
             ),
 
-            TextFormField(
-              autovalidate: true,
-              autocorrect: true,
-              autofocus: false,
-              keyboardAppearance: Brightness.dark,
-              textCapitalization: TextCapitalization.sentences,
-              controller: eDescrptionController,
-              cursorColor: Colors.pinkAccent,
-              maxLines: 4,
-              enableSuggestions: true,
-              maxLength: 250,
-              maxLengthEnforced: false,
-              decoration: InputDecoration(
-                hintText: "Description",
-                contentPadding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                isDense: true,
-                fillColor: Colors.green,
-                suffixText: "What",
-              ),
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .headline2,
-            ),
+            DescriptionWidget(),
             ButtonBar(
+              buttonPadding: EdgeInsets.symmetric(horizontal: 22, vertical: 10),
               alignment: MainAxisAlignment.spaceEvenly,
+              buttonTextTheme: ButtonTextTheme.primary,
               buttonHeight: 20,
               mainAxisSize: MainAxisSize.max,
               layoutBehavior: ButtonBarLayoutBehavior.constrained,
               children: <Widget>[
                 FlatButton(
-                  child: Center(child: Text("Save")),
+                  color: Theme
+                      .of(context)
+                      .primaryColorLight,
+                  child: Center(child: Text("Save", style: Theme
+                      .of(context)
+                      .textTheme
+                      .headline6)),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -422,11 +386,16 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                     }
                   },
                 ),
-                FlatButton(
+                FlatButton(color: Theme
+                    .of(context)
+                    .primaryColorLight,
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Center(child: Text("Cancel")),
+                  child: Center(child: Text("Cancel", style: Theme
+                      .of(context)
+                      .textTheme
+                      .headline6,)),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -438,75 +407,186 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
       ),
     );
   }
+}
 
-  void saveEvent() {
-    _dayEvent.title = eTitleController.text;
-    _dayEvent.startDate = startDate.toString();
-    _dayEvent.endDate = endDate.toString();
+//Title Widget
+class TitleWidget extends StatelessWidget {
+  const TitleWidget({
+    Key key,
+  }) : super(key: key);
 
-    if (eDescrptionController.text.isNotEmpty) {
-      _dayEvent.description = eDescrptionController.text;
-    }
-    else {
-      _dayEvent.description = "";
-    }
-//    if (calendarController.isSelected(startDate)||calendarController.focusedDay==startDate) {
-//      setState(() {
-//        eventListKey.currentState.insertItem(selectedDayEvents.length );
-////
-//      });
-////
-//    }
-
-    //TODO write a recursive method that will reassign [calendarController.selectedDay] to the days within the startDate and the endDate
-//                        calendarController.setSelectedDay(DateTime(startDate.year,startDate.month,startDate.day,0,0),animate: false);
-    if (dayEvents[DateTime(
-        startDate.year, startDate.month, startDate.day, 0, 0)] != null) {
-      dayEvents[DateTime(startDate.year, startDate.month, startDate.day, 0, 0)]
-          .add(_dayEvent.toJson());
-      calendarController.visibleEvents;
-//                          selectedDayEvents.forEach((element) {var user = NewEvent.fromJson(element);
-//                            print(user.toJson());});
-      print("More than one event exists for this day");
-    } else {
-      //TODO cannot have new event [_dayEvent] be saved to key [startDate]. It will override the previous value
-
-      dayEvents[DateTime(
-          startDate.year, startDate.month, startDate.day, 0, 0)] =
-      [_dayEvent.toJson()];
-
-      print("An event has been added");
-//                          print(dayEvents.values.toList());
-//                          print(selectedDayEvents);
-
-    }
-
-    eventPrefs.setString(
-        "events", json.encode(encodeMap(dayEvents)));
-//                      eventListKey.currentState.insertItem(selectedDayEvents.length+1);
-
-    eTitleController.clear();
-    eDescrptionController.clear();
-    orderedSelectedDay();
-//    if (calendarController.isSelected(startDate)) { selectedDayEvents=dayEvents[calendarController.selectedDay];
-//    if(selectedDayEvents.isEmpty){
-//      setState(() {
-//      selectedDayEvents;print(selectedDayEvents);
-//    });
-//    }
-//    }
-//                      _dayEvent = null;
-
-  }
-
-
-  getStartTime(var a) {
-    NewEvent user = NewEvent.fromJson(a);
-    var startTime = DateFormat.jm().format(DateTime.parse(user.startDate));
-    return startTime;
+  @override
+  Widget build(BuildContext context) {
+    return Container(margin: EdgeInsets.only(top: 10, left: 15, right: 15),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+//              shape: BoxShape.circle,
+        color: Theme
+            .of(context)
+            .primaryColorDark,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12.withOpacity(0.5),
+            blurRadius: 10.0,
+            spreadRadius: 1.0,
+            offset: Offset(
+              0,
+              0,
+            ),
+          ),
+        ],
+      ),
+      child: TextFormField(
+        controller: eTitleController,
+        autovalidate: true,
+        autocorrect: true,
+        autofocus: true,
+        // maxLength: 30,
+        // maxLengthEnforced: maxLength>29?false:true,
+        // expands: true,
+        // textInputAction: TextInputAction.continueAction,
+        //  maxLines: maxLength > 29 ? 0 : 1 ,
+        keyboardType: TextInputType.multiline,
+        minLines: 1,
+        //Normal textInputField will be displayed
+        maxLines: 3,
+        enableSuggestions: true,
+        textCapitalization: TextCapitalization.sentences,
+        decoration: InputDecoration(
+          hintText: "Title",
+          contentPadding: EdgeInsets.symmetric(horizontal: 8),
+          focusColor: Colors.pink,
+          alignLabelWithHint: true,
+          border: InputBorder.none,
+        ),
+        // scrollPadding: EdgeInsets.all(10),
+        cursorColor: Colors.pinkAccent,
+        // cursorRadius: Radius.circular(12),
+        style: Theme
+            .of(context)
+            .textTheme
+            .headline5,
+      ),
+    );
   }
 }
 
+//Description widget
+class DescriptionWidget extends StatelessWidget {
+  const DescriptionWidget({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // margin: EdgeInsets.only(top: 10,left: 15,right: 15),
+      margin: EdgeInsets.only(top: 4, bottom: 4, left: 15, right: 15),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+//              shape: BoxShape.circle,
+        color: Theme
+            .of(context)
+            .primaryColorDark,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12.withOpacity(0.5),
+            blurRadius: 10.0,
+            spreadRadius: 1.0,
+            offset: Offset(
+              0,
+              0,
+            ),
+          ),
+        ],
+      ),
+      child: TextFormField(
+        autovalidate: true,
+        autocorrect: true,
+        autofocus: false,
+        keyboardAppearance: Brightness.dark,
+        keyboardType: TextInputType.multiline,
+        minLines: 2,
+        //Normal textInputField will be displayed
+        maxLines: 4,
+        //maxLength>30?maxLength:maxLength+=1,
+        textCapitalization: TextCapitalization.sentences,
+        controller: eDescrptionController,
+        cursorColor: Colors.pinkAccent,
+
+        enableSuggestions: true,
+        // maxLength: 200,
+        // maxLengthEnforced: false,
+        decoration: InputDecoration(
+          hintText: "Description",
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+          alignLabelWithHint: true,
+          // isDense: true,
+          // fillColor: Colors.green,
+          // filled: true,isCollapsed: true
+          // suffixText: "What",
+        ),
+        style: Theme
+            .of(context)
+            .textTheme
+            .headline6,
+      ),
+    );
+  }
+}
+
+
+void saveEvent() {
+  _dayEvent.title = eTitleController.text;
+  _dayEvent.startDate = startDate.toString();
+  _dayEvent.endDate = endDate.toString();
+
+  if (eDescrptionController.text.isNotEmpty) {
+    _dayEvent.description = eDescrptionController.text;
+  }
+  else {
+    _dayEvent.description = "";
+  }
+
+
+  //TODO write a recursive method that will reassign [calendarController.selectedDay] to the days within the startDate and the endDate
+//                        calendarController.setSelectedDay(DateTime(startDate.year,startDate.month,startDate.day,0,0),animate: false);
+  if (dayEvents[DateTime(
+      startDate.year, startDate.month, startDate.day, 0, 0)] != null) {
+    dayEvents[DateTime(startDate.year, startDate.month, startDate.day, 0, 0)]
+        .add(_dayEvent.toJson());
+    calendarController.visibleEvents;
+//                          selectedDayEvents.forEach((element) {var user = NewEvent.fromJson(element);
+//                            print(user.toJson());});
+    print("More than one event exists for this day");
+  } else {
+    //TODO cannot have new event [_dayEvent] be saved to key [startDate]. It will override the previous value
+
+    dayEvents[DateTime(
+        startDate.year, startDate.month, startDate.day, 0, 0)] =
+    [_dayEvent.toJson()];
+
+    print("An event has been added");
+//                          print(dayEvents.values.toList());
+//                          print(selectedDayEvents);
+
+  }
+
+  eventPrefs.setString(
+      "events", json.encode(encodeMap(dayEvents)));
+//                      eventListKey.currentState.insertItem(selectedDayEvents.length+1);
+
+  eTitleController.clear();
+  eDescrptionController.clear();
+  orderedSelectedDay();
+}
+
+getStartTime(var a) {
+  NewEvent user = NewEvent.fromJson(a);
+  var startTime = DateFormat.jm().format(DateTime.parse(user.startDate));
+  return startTime;
+}
 
 //                  print(dayEvents);
 ////                  dayEvents=[(dayEvents.keys,dayEvents)];

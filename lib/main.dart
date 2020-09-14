@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:events/globals.dart';
-import 'package:flutter/rendering.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import 'custom_widgets.dart';
 
@@ -39,55 +39,65 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
+switchPage() {
+  switch (switchWidget) {
+    case 0:
+      {
+        return Year();
+      }
+      break;
+    case 1:
+      {
+        return MyBody();
+      }
+      break;
+    case 2:
+      {
+        return ViewDayEvents();
+//            viewDayEvents(context);
+      }
+      break;
+    case 3:
+      {
+        return SearchEvents();
+      }
+      break;
+    case 4:
+      {
+        return Settings();
+      }
+      break;
+    default:
+      {
+        return MyBody();
+      }
+      break;
+  }
+}
+
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   double screenHeight;
   double screenWidth;
 
   List<Color> dkMdMenu = [
-    Color(0xFF3f4754),
-    Color(0xFF2b3442),
-    Color(0xFF27303f),
-    Color(0xFF232d3b)
+    Color(0xFF5d646e), //3f4754),
+    Color(0xFF464e5a), //2b3442),
+    Color(0xFF2f3845), //27303f),
+    // Color(0xFF232d3b)
+    Color(0xff182231)
   ];
   List<Color> lghtMdMenu = [
-    Colors.blueGrey.shade200,
-    Colors.blueGrey.shade300,
-    Colors.blueGrey.shade400,
-    Colors.blueGrey.shade500,
+    Color(0xFF74adec), //73AEF5),
+    Color(0xFF60a1ea), //61A4F1),
+    Color(0xFF4c95e7), //478DE0),
+    Color(0xFF398AE5),
+    // Colors.blueGrey.shade200,
+    // Colors.blueGrey.shade300,
+    // Colors.blueGrey.shade400,
+    // Colors.blueGrey.shade500,
   ];
   double endVal = 0.0;
   final _pageController = PageController(initialPage: 0, keepPage: true);
-
-  switchPage() {
-    switch (switchWidget) {
-      case 0:
-        {
-          return Year();
-        }
-        break;
-      case 1:
-        {
-          return MyBody();
-        }
-        break;
-      case 2:
-        {
-          return ViewDayEvents();
-//            viewDayEvents(context);
-        }
-        break;
-      case 3:
-        {
-          return Settings();
-        }
-        break;
-      default:
-        {
-          return MyBody();
-        }
-        break;
-    }
-  }
 
   @override
   void initState() {
@@ -95,10 +105,15 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     mainController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
 //resized?mainController.forward():mainController.reverse();
-    calendarController = CalendarController();
+
     dayEvents = {};
     selectedDayEvents = [];
     switchPage();
+    scaleController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
+    scaleAnimation =
+        Tween<double>(begin: 1, end: 0.65).animate(scaleController);
+    // Appbar();
 //    mainController = AnimationController(vsync: this, duration: duration,animationBehavior: AnimationBehavior.normal,)..forward();
 //mainAnimation=Tween(begin: 0.0, end: 16.0).animate(CurvedAnimation(parent: mainController, curve: Curves.easeIn, reverseCurve: Curves.easeOut))..addStatusListener(
 //        (AnimationStatus status) {
@@ -129,9 +144,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   @override
   void dispose() {
     super.dispose();
-    calendarController.dispose();
+
     _pageController.dispose();
     mainController.dispose();
+    scaleController.dispose();
   }
 
   @override
@@ -145,12 +161,18 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       allowImplicitScrolling: true,
       pageSnapping: true,
       children: <Widget>[
-        body(context),
+        body(context)
+        // MainBodyWidget(),
 //        viewDayEvents(context),
 //        ViewDayEvents(),
       ],
     );
     resized ? mainController.reverse() : mainController.forward();
+    mainAnimation = RelativeRectTween(
+      begin: new RelativeRect.fromLTRB(0.0, 0.0, 0.0, 0.0),
+      end: new RelativeRect.fromLTRB(screenWidth * 0.65, screenWidth * 0.2,
+          screenWidth * -0.4, screenWidth * 0.2),
+    ).animate(CurvedAnimation(parent: mainController, curve: Curves.easeInOut));
     return Scaffold(
       resizeToAvoidBottomInset: true,
       resizeToAvoidBottomPadding: true,
@@ -161,37 +183,30 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: menuGradient ? dkMdMenu : lghtMdMenu,
-            begin: Alignment.topRight,
-            end: Alignment.bottomRight,
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
             stops: <double>[0.1, 0.4, 0.7, 0.9],
           ),
         ),
-        child: Stack(
-          children: <Widget>[
-            menu(context),
-            AnimatedBuilder(
-              builder: (context, child) {
-                return child;
-              },
-              animation: mainAnimation = RelativeRectTween(
-                begin: new RelativeRect.fromLTRB(0.0, 0.0, 0.0, 0.0),
-                end: new RelativeRect.fromLTRB(screenWidth * 0.6,
-                    screenWidth * 0.2, screenWidth * -0.4, screenWidth * 0.2),
-              ).animate(CurvedAnimation(
-                  parent: mainController, curve: Curves.easeInOut))
-                ..addStatusListener((AnimationStatus status) {
-//              if (status == AnimationStatus.completed&&resized==true) {
-//                                      mainController.reverse();
-//                                 } else if (status == AnimationStatus.dismissed&&resized==false) {
-//                                   mainController.forward();
-//                                 }
-                }),
-              child: PositionedTransition(
-                rect: mainAnimation,
-                child: pageView,
+        child: SingleChildScrollView(
+          child: Stack(
+            children: <Widget>[
+              menu(context),
+              // Menu(),
+              AnimatedBuilder(
+                builder: (context, child) {
+                  return child;
+                },
+                animation: mainAnimation,
+                child: PositionedTransition(
+                    rect: mainAnimation,
+                    // child: ScaleTransition(
+                    //   scale: scaleAnimation,
+                    child: pageView),
+                // ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -199,11 +214,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   Widget appbar(context) {
     return Container(
-      margin: EdgeInsets.only(top: 20),
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
+      margin: EdgeInsets.symmetric(vertical: 10),
+      width: MediaQuery.of(context).size.width,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -216,7 +228,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: IconButton(
-//                                                  icon: Icon(MdiIcons.equalizerOutline),
                     icon: Icon(IconData(0xe800, fontFamily: "appicons")),
                     color: Colors.pink,
                     splashColor: Colors.blue,
@@ -224,9 +235,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     onPressed: () {
                       setState(() {
                         resized = !resized;
-//                        selected=!resized;
-//                        resized==true?selected=true:selected=false;
                       });
+                      // print();
+                      // setState(() {
+                      //   // if(resized)scaleController.forward();else scaleController.reverse();
+                      //
+                      //   // widget.isResized=widget.isResized=
+                      // });
                     }),
               ),
             ),
@@ -246,7 +261,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         child: ModalBottomSheet(),
                       );
                     },
-                    backgroundColor: Colors.blueGrey,
+                    backgroundColor: Theme
+                        .of(context)
+                        .disabledColor,
                     enableDrag: true,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.vertical(
@@ -279,147 +296,344 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       duration: Duration(seconds: 1),
       curve: Curves.easeIn,
       child:
-//      ListWheelScrollView(
-////                mainAxisAlignment: MainAxisAlignment.center,
-//        itemExtent: 100,
-//        diameterRatio: 3,
-//        /*          magnification: 1.5, useMagnifier: true,*/
-//        offAxisFraction: 0.5,
-//        perspective: 0.005,
-//        physics: BouncingScrollPhysics(),
-//        /*          clipToSize: true,*/
-//        children: <Widget>[
-          Container(
+      Container(
         alignment: Alignment.centerLeft,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            FlatButton(
-              onPressed: () {
-                setState(() {
-                  switchWidget = 0;
-                });
-              },
-              child: Text(
-                "Year",
-                style: switchWidget == 0
-                    ? Theme
-                    .of(context)
-                    .textTheme
-                    .headline1
-                    : Theme
-                    .of(context)
-                    .textTheme
-                    .headline2,
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        width: MediaQuery
+            .of(context)
+            .size
+            .width,
+        height: MediaQuery
+            .of(context)
+            .size
+            .height,
+        child: Container(
+          width: MediaQuery
+              .of(context)
+              .size
+              .width * 0.60,
+          margin: EdgeInsets.only(bottom: 50.0, top: 80),
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: CircleAvatar(
+                        backgroundImage:
+                        AssetImage(
+                          "images/jackson-david-7t7pFCjTmws-unsplash.jpg",),
+                        // child: Image.asset("images/jackson-david-7t7pFCjTmws-unsplash.jpg",alignment: Alignment.topCenter,
+                        //  fit: BoxFit.fill,gaplessPlayback: true, // placeholder: 'images/loading.gif',
+                        //   // image: 'images/jackson-david-7t7pFCjTmws-unsplash.jpg',
+                        // ),
+                        // child: Image.asset("assets/images/jackson-david-7t7pFCjTmws-unsplash.jpg",matchTextDirection: true,),
+                        maxRadius: 30,
+                        minRadius: 10,
+                      ),
+                    ),
+                    Text("Events", overflow: TextOverflow.fade,
+                      textAlign: TextAlign.justify,
+                      semanticsLabel: "Events",
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .headline1,)
+                  ],
+                ),
               ),
-//                  color:Colors.amber ,
-            ),
-            FlatButton(
-              onPressed: () {
-                setState(() {
-                  switchWidget = 1;
-                });
-              },
-              child: Text(
-                "Month",
-                style: switchWidget == 1
-                    ? Theme
-                    .of(context)
-                    .textTheme
-                    .headline1
-                    : Theme
-                    .of(context)
-                    .textTheme
-                    .headline2,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 2,
+                    margin: EdgeInsets.symmetric(vertical: 25, horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: Theme
+                          .of(context)
+                          .backgroundColor,
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                    ),
+                    // child: Divider()
+                  ),
+                  flatButtonWidget(
+                      context, 0, "Year", MdiIcons.calendarBlankMultiple),
+                  flatButtonWidget(context, 1, "Month", MdiIcons.calendarMonth),
+                  flatButtonWidget(context, 2, "Day", Icons.calendar_today),
+                  flatButtonWidget(context, 3, "Search", Icons.search),
+//                   FlatButton.icon(
+//                     onPressed: () {
+//                       setState(() {
+//                         switchWidget = 1;
+//                       });
+//                     },
+//                     icon: Icon(MdiIcons.calendarMonth),
+//                     label: Text(
+//                     "Month",
+//                     style: switchWidget == 1
+//                         ?  Theme
+//                         .of(context)
+//                         .textTheme
+//                         .headline6.copyWith(fontWeight: FontWeight.w600,fontSize: 24)
+//                         : Theme
+//                         .of(context)
+//                         .textTheme
+//                         .headline6,
+//                   ),
+//                   ),
+//                   FlatButton.icon(
+//                     onPressed: () {
+//                       setState(() {
+//                         // switchWidget = 2;
+//                       });
+//                     },icon: Icon(Icons.calendar_today),label: Text(
+//                     "Day",
+//                     style: switchWidget == 2
+//                         ?  Theme
+//                         .of(context)
+//                         .textTheme
+//                         .headline6.copyWith(fontWeight: FontWeight.w600,fontSize: 24)
+//                         : Theme
+//                         .of(context)
+//                         .textTheme
+//                         .headline6,
+//                   ),
+// //                  color:Colors.amber ,
+//                   ),
+//                   FlatButton.icon(
+//                     onPressed: () {
+//                       setState(() {
+//                         // switchWidget = 2;
+//                       });
+//                     },icon: Icon(Icons.search,semanticLabel: "Calendar Search",),
+//                     label: Text(
+//                     "Search",
+//                     style: switchWidget == 3
+//                         ?  Theme
+//                         .of(context)
+//                         .textTheme
+//                         .headline6.copyWith(fontWeight: FontWeight.w600,fontSize: 24)
+//                           : Theme
+//                       .of(context)
+//                       .textTheme
+//                       .headline6,
+//                   ),
+// //                  color:Colors.amber ,
+//                   ),
+                  Container(
+                    width: double.infinity, height: 2,
+                    margin: EdgeInsets.symmetric(vertical: 25, horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: Theme
+                          .of(context)
+                          .backgroundColor,
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                    ),
+                    // child: Divider()
+                  ),
+                ],
               ),
-//                  color:Colors.amber ,
-            ),
-            FlatButton(
-              onPressed: () {
-                setState(() {
-                  switchWidget = 2;
-                });
-              },
-              child: Text(
-                "Day",
-                style: switchWidget == 2
-                    ? Theme
-                    .of(context)
-                    .textTheme
-                    .headline1
-                    : Theme
-                    .of(context)
-                    .textTheme
-                    .headline2,
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: flatButtonWidget(context, 4, "Settings", Icons.settings),
               ),
-//                  color:Colors.amber ,
-            ),
-            FlatButton(
-              onPressed: () {
-                setState(() {
-                  switchWidget = 3;
-                });
-              },
-              child: Text(
-                "Settings",
-                style: switchWidget == 3
-                    ? Theme
-                    .of(context)
-                    .textTheme
-                    .headline1
-                    : Theme
-                    .of(context)
-                    .textTheme
-                    .headline2,
-              ),
-//                  color:Colors.amber ,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget body(context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(resized ? 0 : 16),
-      child: Container(
-        color: Theme
+  FlatButton flatButtonWidget(context, switchVal, label, icon) {
+    return FlatButton.icon(
+      onPressed: () {
+        setState(() {
+          switchWidget = switchVal;
+        });
+      },
+      // disabledTextColor: Theme.of(context).disabledColor.withOpacity(0.5),
+      label: Text(
+        label, textAlign: TextAlign.start,
+        style: switchWidget == switchVal
+            ? Theme
             .of(context)
-            .primaryColor,
-        child: Wrap(
-          direction: Axis.horizontal,
-//          mainAxisAlignment: MainAxisAlignment.start,
-//          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            appbar(context),
-            AnimatedSwitcher(
-              transitionBuilder: (Widget child, Animation<double> animation) {
-                final offsetAnimation = Tween<Offset>(
-                    begin: Offset(0.0, 1.0), end: Offset(0.0, 0.0))
-                    .animate(animation);
-                return SlideTransition(
-                  position: offsetAnimation,
-                  child: child,
-                );
-              },
-//              layoutBuilder: (currentChild, previousChildren) {
-//                return currentChild;
-//              },
-              switchInCurve: Curves.easeInOut,
-              switchOutCurve: Curves.easeInOut,
-              duration: Duration(seconds: 3),
-              child: switchWidget == 1 ? MyBody() : switchPage(),
+            .textTheme
+            .headline6
+            .copyWith(fontWeight: FontWeight.w600, fontSize: 24)
+            : Theme
+            .of(context)
+            .textTheme
+            .headline6,
+      ), icon: Icon(icon),
+    );
+  }
+
+
+  Widget body(context) {
+    return
+      ClipRRect(
+        borderRadius: BorderRadius.circular(resized ? 0 : 16),
+        child: Container(
+          color: Theme
+              .of(context)
+              .primaryColor,
+          child: Wrap(
+            direction: Axis.horizontal,
+            children: <Widget>[
+              // Appbar(onChanged: _handleTapboxChanged,isResized: _active,),
+              appbar(context),
+              AnimatedSwitcher(
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  final offsetAnimation = Tween<Offset>(
+                      begin: Offset(0.0, 1.0), end: Offset(0.0, 0.0))
+                      .animate(animation);
+                  return SlideTransition(
+                    position: offsetAnimation,
+                    child: child,
+                  );
+                },
+                switchInCurve: Curves.easeInOut,
+                switchOutCurve: Curves.easeInOut,
+                duration: Duration(seconds: 3),
+                child: switchWidget == 1 ? MyBody() : switchPage(),
 //                  (() {
 //                    switchPage()
 //                  }()),
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
   }
 }
 
-///*              Offstage( offstage: visibility,child: , ),*/    Curve _curve = Curves.fastOutSlowIn; DraggableScrollableSheet _newEvent= new DraggableScrollableSheet( initialChildSize: 0.4, minChildSize: 0.2, maxChildSize: 0.6,expand: true, builder: (context, scrollController){ return SingleChildScrollView( controller:scrollController, child: Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."), ); } );Fher ScrollController scrollController = ScrollController( initialScrollOffset: 50, // or whatever offset you wish keepScrollOffset: true, ); ListView( padding: EdgeInsets.zero, shrinkWrap: true, children: <Widget>[ DrawerHeader( child: Text( "Drawer header", style: TextStyle(color: Colors.amber), ), ), ListTile( //            contentPadding: EdgeInsetsGeometry.infinity, leading: IconButton( icon: Icon(Icons.calendar_today), onPressed: () {}, ), title: Text("Year", style: Theme.of(context).textTheme.headline1), ), ListTile( //            contentPadding: EdgeInsetsGeometry.infinity, leading: IconButton( icon: Icon(Icons.calendar_today), onPressed: () {}, ), title: Text("Year", style: Theme.of(context).textTheme.headline1), ), ListTile( //            contentPadding: EdgeInsetsGeometry.infinity, leading: IconButton( icon: Icon(Icons.calendar_today), onPressed: () {}, ), title: Text("Year", style: Theme.of(context).textTheme.headline1), ), //          UserAccountsDrawerHeader(accountName: Text(), accountEmail: null) ], ), ), ), double _top, _bottom, _left, _right = 0; TextStyle textStyle1 = Theme.of(context).textTheme.headline1; DraggableScrollableSheet _newEvent = DraggableScrollableSheet( initialChildSize: 0.05, minChildSize: 0.05, maxChildSize: 0.99, expand: true, //      expand: _expand, builder: (context, scrollController) { return Container( //            color: Colors.blue[100], decoration: BoxDecoration( borderRadius: BorderRadius.only( topLeft: Radius.circular(75.0), topRight: Radius.circular( 75.0, ), ), color: Colors.blue[100], boxShadow: [ BoxShadow( color: Colors.red.withOpacity(0.5), blurRadius: 10.0, spreadRadius: 1.0, offset: Offset( 0, 0, ), ), ], ), child: ListView.builder( controller: scrollController, itemCount: 12, itemBuilder: (BuildContext context, int index) { return ListTile(title: Text(monthNames[index])); }, ), ); }); _myDrawer = new Container( width: 150, //      color: Colors.blue, child: Drawer( elevation: 0, child: Container( color: Color.fromRGBO(24, 34, 49, 100), //backgroundColor: , //backgroundColor: Colors.transparent, child: Column( mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[ ListView( padding: EdgeInsets.zero, shrinkWrap: true, children: <Widget>[ DrawerHeader( child: Text( "Drawer header", style: TextStyle(color: Colors.amber), ), ), ListTile( //            contentPadding: EdgeInsetsGeometry.infinity, leading: IconButton( icon: Icon(Icons.calendar_today), onPressed: () {}, ), title: Text("Year"), ), ListTile( //            contentPadding: EdgeInsetsGeometry.infinity, leading: IconButton( icon: Icon(Icons.calendar_today), onPressed: () {}, ), title: Text("Year"), ), ListTile( //            contentPadding: EdgeInsetsGeometry.infinity, leading: IconButton( icon: Icon(Icons.calendar_today), onPressed: () {}, ), title: Text("Year"), ), //          UserAccountsDrawerHeader(accountName: Text(), accountEmail: null) ], ), ], ), ), ), );/*    ScaleTransition _myBody = ScaleTransition( alignment: alignment, *//*          ListWheelScrollView( children: <Widget>[ MaterialButton(onPressed: () { setState(() { switchWidget=!switchWidget; }); //              Navigator.push( //                context, //                MaterialPageRoute( //                  builder: (context) => settings(context),),); // //body(context) },child: Text("data"), //                icon: Icon(Icons.settings), label: Text("settings"), ), Container( height: 100, color: Colors.amber, child: ListTile( title: Text( "data", style: TextStyle( fontFamily: "Phenomena", fontSize: 80, color: Colors.pink), ), ), ), Container( height: 100, color: Colors.amber, child: ListTile( title: Text( "data", style: TextStyle( fontFamily: "Phenomena", fontSize: 80, color: Colors.pink), ), ), ), Container( height: 100, color: Colors.amber, child: ListTile( title: Text( "data", style: TextStyle( fontFamily: "Phenomena", fontSize: 80, color: Colors.pink), ), ), ), Container( height: 100, color: Colors.amber, child: ListTile( title: Text( "data", style: TextStyle( fontFamily: "Phenomena", fontSize: 80, color: Colors.pink), ), ), ), Container( height: 80, color: Colors.amber, padding: EdgeInsets.only(top: 30, left: 40), child: ListTile( title: Text( "data", style: TextStyle( fontFamily: "Phenomena", fontSize: 80, color: Colors.pink), ), ), ), ], ),*/  /*        Color(0xff303947), Color(0xff161e2c), Color(0xFF1B2534), Color(0xFF1A2433), Color(0xFF182231), Color(0xFF182130), Color.fromRGBO(24, 36, 49, 100), Color.fromRGBO(24, 34, 49, 100), Color.fromRGBO(24, 32, 49, 100), Color.fromRGBO(24, 30, 49, 100), HexColor("#242d3c"),//182431 HexColor("#242d3c"),//182231 HexColor("#182231"),//182031 HexColor("#17202e"),//181e31 Colors.blueGrey.shade200, Colors.blueGrey.shade300, Colors.blueGrey.shade400, Colors.blueGrey.shade500, CSSColors.cadetBlue.,*/
+
+// class MainBodyWidget extends StatefulWidget {
+// //   MainBodyWidget({Key key,this.resize}):super(key:key);
+// // final bool resize;
+//   @override
+//   _MainBodyWidgetState createState() => _MainBodyWidgetState();
+// }
+//
+// class _MainBodyWidgetState extends State<MainBodyWidget> {
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return ClipRRect(
+//       borderRadius: BorderRadius.circular(resized ? 0 : 16),
+//       child: Container(
+//         color: Theme
+//             .of(context)
+//             .primaryColor,
+//         child: Wrap(
+//           direction: Axis.horizontal,
+//           children: <Widget>[
+//             // Appbar(isResized: resized,key: ValueKey(1),),
+//             Appbar(onChanged: _handleTapboxChanged,isResized: _active,),
+//             AnimatedSwitcher(
+//               transitionBuilder: (Widget child, Animation<double> animation) {
+//                 final offsetAnimation = Tween<Offset>(
+//                     begin: Offset(0.0, 1.0), end: Offset(0.0, 0.0))
+//                     .animate(animation);
+//                 return SlideTransition(
+//                   position: offsetAnimation,
+//                   child: child,
+//                 );
+//               },
+//               switchInCurve: Curves.easeInOut,
+//               switchOutCurve: Curves.easeInOut,
+//               duration: Duration(seconds: 3),
+//               child: switchWidget == 1 ? MyBody() : switchPage(),
+// //                  (() {
+// //                    switchPage()
+// //                  }()),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+//
+// //   Container appbar(context){
+// //     return Container(
+// //       margin: EdgeInsets.symmetric(vertical: 10),
+// //       width: MediaQuery
+// //           .of(context)
+// //           .size
+// //           .width,
+// //       child: Row(
+// //         crossAxisAlignment: CrossAxisAlignment.center,
+// //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+// //         children: <Widget>[
+// //           Transform(
+// //             transform: Matrix4.rotationX(pi),
+// //             alignment: Alignment.center,
+// //             child: Transform.rotate(
+// //               angle: pi / 2,
+// //               child: Padding(
+// //                 padding: const EdgeInsets.all(8.0),
+// //                 child: IconButton(
+// //                     icon: Icon(IconData(0xe800, fontFamily: "appicons")),
+// //                     color: Colors.pink,
+// //                     splashColor: Colors.blue,
+// //                     hoverColor: Colors.green,
+// //                     onPressed: () {
+// //                       setState(() {
+// //                         // if(resized)scaleController.forward();else scaleController.reverse();
+// //                         resized = !resized;
+// //                         print(resized);
+// //                         // scaffoldKey.currentContext.widget;
+// //                         // MainBodyWidget();
+// //                       });
+// //                     }),
+// //               ),
+// //             ),
+// //           ),
+// //           IconButton(
+// //             icon: Icon(Icons.add),
+// //             color: Colors.pink,
+// //             iconSize: 30,
+// //             onPressed: () {
+// //               if (modalOpen == false) {
+// //                 modalOpen = true;
+// //                 setState(() {
+// //                   showModalBottomSheet(
+// //                     context: context,
+// //                     builder: (context) {
+// //                       return SingleChildScrollView(
+// //                         child: ModalBottomSheet(),
+// //                       );
+// //                     },
+// //                     backgroundColor: Theme.of(context).disabledColor,
+// //                     enableDrag: true,
+// //                     shape: RoundedRectangleBorder(
+// //                       borderRadius: BorderRadius.vertical(
+// //                         top: Radius.circular(25.0),
+// //                       ),
+// //                     ),
+// //                     isScrollControlled: true,
+// //                     useRootNavigator: true,
+// //                     isDismissible: true,
+// //                   );
+// //                 });
+// //               }
+// //               if (modalOpen == true) {
+// //                 modalOpen = false;
+// // //                setState(() {
+// // //                  eTitleController.clear();
+// // //                });
+// //               }
+// //             },
+// //           ),
+// //         ],
+// //       ),
+// //     );
+// //   }
+// }
+
