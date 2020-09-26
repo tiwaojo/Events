@@ -36,6 +36,7 @@ bool resized = true;
 bool selected = false;
 int switchWidget = 1;
 bool menuGradient = false;
+bool autofocus = false;
 double decorGradient = 0.25;
 Duration duration = const Duration(seconds: 2);
 
@@ -44,6 +45,7 @@ Map<DateTime, List<dynamic>> dayEvents;
 
 // Controllers for the form fields
 CalendarController calendarController;
+ScrollController listScrollController;
 TextEditingController eTitleController;
 TextEditingController eDescrptionController;
 TextEditingController eSearchController;
@@ -56,7 +58,6 @@ Map<String, dynamic> encodeMap(Map<DateTime, dynamic> map) {
   Map<String, dynamic> newMap = {};
   map.forEach((key, value) {
     newMap[key.toString()] = map[key];
-//    newMap[value.toString()] = map[value];
   });
   return newMap;
 }
@@ -79,36 +80,18 @@ class NewEvent {
   NewEvent(this.title, this.startDate, this.endDate, this.description);
 
   Map<String, dynamic> toJson() => {
-
-//    return {
         'title': this.title,
         'startDate': this.startDate,
         'endDate': this.endDate,
         'description': this.description,
-//    };
       };
 
-//  Map fromJson(Map<String, dynamic> json)=>{
-//title = json['title'],
-//        startDate = json['startDate'],
-//        endDate = json['endDate'],
-//        description = json['description'];
-//  }
-
-//  NewEvent.fromJson(   dynamic data)
-//      : title = data["title"],
-//        startDate = data['startDate'],
-//        endDate = data['endDate'],
-//        description = data['description'];
 
   factory NewEvent.fromJson(dynamic json) {
     return NewEvent(
         json['title'], json['startDate'], json['endDate'], json['description']);
   }
 
-//  NewEvent.withoutDescription(this.title,this.startDate,this.endDate){
-//    this.startDate = currentDate;
-//    this.endDate = currentDate.add(Duration(days: 1));
 }
 
 void orderedSelectedDay() {
@@ -125,7 +108,7 @@ void orderedSelectedDay() {
           selectedDayEvents.insert(j, user2.toJson());
           selectedDayEvents.removeAt(1 + j);
           selectedDayEvents.insert(1 + j, user1.toJson());
-          print('$time1 > $time2');
+          // print('$time1 > $time2');
         }
       }
     }
@@ -138,10 +121,8 @@ bool isEventNow(
 ) {
   //method to determine and allow for UI decoration based on if the event/events are already happening
 // Future<bool>result= Future.delayed(duration,(){
-  if (currentDate.isBefore(DateTime.parse(startDate)) == false &&
-      currentDate.isAfter(DateTime.parse(endDate)) == false) {
-    //|| currentDate.isAtSameMomentAs(DateTime.parse(startDate))) {
-//      print("$currentDate is after $startDate");
+  if (currentDate.isAfter(DateTime.parse(startDate)) &&
+      currentDate.isBefore(DateTime.parse(endDate))) {
     return true;
   } else {
     return false;

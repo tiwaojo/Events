@@ -1,6 +1,4 @@
 import 'package:events/globals.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 final ThemeData light = ThemeData(
   textTheme: TextTheme(
@@ -12,24 +10,19 @@ final ThemeData light = ThemeData(
     ),
     headline2: TextStyle(
       fontFamily: "Phenomena",
-      // fontSize: 16,
       color: Color(0xFFFF3366),
     ),
     headline3: TextStyle(
       fontFamily: "Phenomena",
-      // fontSize: 14,
       color: Color(0xFFFF3366),
     ),
     headline4: TextStyle(
       fontFamily: "Phenomena",
       decorationStyle: TextDecorationStyle.double, decorationThickness: 10,
-// fontWeight: FontWeight.w300,
-//      fontSize: 30,
       color: Color(0xFFFF3366),
     ),
     headline5: TextStyle(
       fontFamily: "Phenomena",
-//      fontSize: 30,
       color: Color(0xFFFF3366),
     ),
     headline6: TextStyle(
@@ -40,52 +33,26 @@ final ThemeData light = ThemeData(
     ),
     bodyText1: TextStyle(
       fontFamily: "Phenomena",
-      // fontSize: 20,
       color: Color(0xFFFF3366),
-      // fontWeight: FontWeight.w300,
     ),
     bodyText2: TextStyle(
       fontFamily: "Phenomena",
-      // fontSize: 20,
       color: Color(0xFFFF3366),
-      // fontWeight: FontWeight.w300,
     ),
     subtitle1: TextStyle(
       fontFamily: "Phenomena",
       fontSize: 20,
       color: Color(0xFFFF3366),
-      // fontWeight: FontWeight.w300,
     ),
     subtitle2: TextStyle(
         fontFamily: "Phenomena",
         fontSize: 16,
-        color: Color(0XFFC8C8C8).withOpacity(0.5)
-        // fontWeight: FontWeight.w300,
-        ),
+        color: Color(0XFFC8C8C8).withOpacity(0.5)),
     caption: TextStyle(
       fontFamily: "Phenomena",
-      // fontSize: 20,
       color: Color(0xFFFF3366),
-      // fontWeight: FontWeight.w300,
     ),
   ),
-  accentColor: Color(0xFFFF0080),
-  //FF3366),
-  backgroundColor: Color(0xFF202836),
-  scaffoldBackgroundColor: Color(0xFF398AE5),
-  primaryColor: Color(0xff398AE5),
-  primaryColorDark: Color(0xFF41424A),
-  primaryColorLight: Color(0xFF1C4572),
-  focusColor: Color(0xFFC8C8C8),
-  disabledColor: Color(0xFF3176c6),
-  //233142
-  dividerTheme: DividerThemeData(
-      // color: Color(0xFF262E3E),
-      color: Color(0xff191847),
-      endIndent: 10,
-      indent: 10,
-      space: 45,
-      thickness: 1.5),
   inputDecorationTheme: InputDecorationTheme(
     // fillColor: Color(0xff182231),
     contentPadding: EdgeInsets.only(left: 10),
@@ -95,6 +62,23 @@ final ThemeData light = ThemeData(
         gapPadding: 10),
     alignLabelWithHint: true,
   ),
+  timePickerTheme: TimePickerThemeData(
+    backgroundColor: Color(0xFF1C4572),
+    dialHandColor: Color(0xff398AE5),
+    dialTextColor: Color(0xFFC8C8C8),
+    hourMinuteTextColor: Color(0xFFC8C8C8),
+    dayPeriodBorderSide: BorderSide.none,
+  ),
+
+  accentColor: Color(0xFFFF0080),
+  //FF3366),
+  backgroundColor: Color(0xFF202836),
+  scaffoldBackgroundColor: Color(0xFF398AE5),
+  primaryColor: Color(0xff398AE5),
+  primaryColorDark: Color(0xFF41424A),
+  primaryColorLight: Color(0xFF1C4572),
+  focusColor: Color(0xFFC8C8C8),
+  disabledColor: Color(0xFF3176c6), //233142
 );
 
 final ThemeData dark = ThemeData(
@@ -106,24 +90,19 @@ final ThemeData dark = ThemeData(
       ),
       headline2: TextStyle(
         fontFamily: "Phenomena",
-        // fontSize: 16,
         color: Color(0xFFFF3366),
       ),
       headline3: TextStyle(
         fontFamily: "Phenomena",
-        // fontSize: 14,
         color: Color(0xFFFF3366),
       ),
       headline4: TextStyle(
         fontFamily: "Phenomena",
         decorationStyle: TextDecorationStyle.double, decorationThickness: 10,
-// fontWeight: FontWeight.w300,
-//      fontSize: 30,
         color: Color(0xFFFF3366),
       ),
       headline5: TextStyle(
         fontFamily: "Phenomena",
-//      fontSize: 30,
         color: Color(0xFFFF3366),
       ),
       headline6: TextStyle(
@@ -134,67 +113,58 @@ final ThemeData dark = ThemeData(
       ),
       bodyText1: TextStyle(
         fontFamily: "Phenomena",
-        // fontSize: 20,
         color: Color(0xFFFF3366),
-        // fontWeight: FontWeight.w300,
       ),
       bodyText2: TextStyle(
         fontFamily: "Phenomena",
-        // fontSize: 20,
         color: Color(0xFFFF3366),
-        // fontWeight: FontWeight.w300,
       ),
       subtitle1: TextStyle(
         fontFamily: "Phenomena",
         fontSize: 20,
         color: Color(0xFFFF3366),
-        // fontWeight: FontWeight.w300,
       ),
-      subtitle2: TextStyle(
-          fontFamily: "Phenomena",
-          fontSize: 16,
-          color: Color(0XFFC8C8C8).withOpacity(0.5)
-        // fontWeight: FontWeight.w300,
-      ),
-      caption: TextStyle(
+    subtitle2: TextStyle(
         fontFamily: "Phenomena",
-        // fontSize: 20,
-        color: Color(0xFFFF3366),
-        // fontWeight: FontWeight.w300,
-      ),
-
-
+        fontSize: 16,
+        color: Color(0XFFC8C8C8).withOpacity(0.5)),
+    caption: TextStyle(
+      fontFamily: "Phenomena",
+      color: Color(0xFFFF3366),
     ),
-    inputDecorationTheme: InputDecorationTheme(
-      // fillColor: Color(0xff182231),
-      contentPadding: EdgeInsets.only(left: 10),
-      focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.pink),
-          borderRadius: BorderRadius.circular(10),
-          gapPadding: 10),
-      alignLabelWithHint: true,
+  ),
+  inputDecorationTheme: InputDecorationTheme(
+    // fillColor: Color(0xff182231),
+    contentPadding: EdgeInsets.only(left: 10),
+    focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.pink),
+        borderRadius: BorderRadius.circular(10),
+        gapPadding: 10),
+    alignLabelWithHint: true,
+  ),
+  timePickerTheme: TimePickerThemeData(
+    backgroundColor: Color(0xff182231),
+    dialHandColor: Color(0xff182231),
+    dialTextColor: Color(0xFFC8C8C8),
+    dayPeriodColor: Color(0xFF41424A),
+    hourMinuteTextColor: Color(0xFFC8C8C8),
+    dayPeriodBorderSide: BorderSide.none,
+    dayPeriodTextStyle: TextStyle(
+      fontFamily: "Phenomena",
+      color: Color(0xFFFF3366),
     ),
-    disabledColor: Color(0xFF233142),
-    //3176c6
+  ),
 
-    scaffoldBackgroundColor: Color(0xff182231),
-    primaryColor: Color(0xff182231),
-    primaryColorDark: Color(0xFF41424A),
-    primaryColorLight: Color(0xFF35e636e),
-    //1C4572),
-    accentColor: Color(0xFFFF3366),
-    focusColor: Color(0xFFC8C8C8),
-    backgroundColor: Color(0xFF202836),
-    //   dividerTheme:DividerThemeData(
-    // // color: Color(0xFF262E3E),
-    //   color:
-    //   // Color(0xFF191847),
-    //       Color(0xff737883),
-    //   endIndent: 10,
-    //   indent: 10,
-    //   space: 45,
-    //   thickness: 1.5),
-    iconTheme: IconThemeData(color: Color(0xff182231))
+  disabledColor: Color(0xFF233142),
+  //3176c6
+  scaffoldBackgroundColor: Color(0xff182231),
+  primaryColor: Color(0xff182231),
+  primaryColorDark: Color(0xFF41424A),
+  primaryColorLight: Color(0xFF35E636E),
+  //1C4572),
+  accentColor: Color(0xFFFF3366),
+  focusColor: Color(0xFFC8C8C8),
+  backgroundColor: Color(0xFF202836),
 );
 
 class ThemeNotifier extends ChangeNotifier {
@@ -206,7 +176,6 @@ class ThemeNotifier extends ChangeNotifier {
 
   ThemeNotifier() {
     _darkTheme = true;
-
     _loadFromPrefs();
   }
 

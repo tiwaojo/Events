@@ -1,29 +1,32 @@
 import 'dart:math';
 
 import 'package:events/globals.dart';
+import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import 'custom_widgets.dart';
 
 void main() {
-  //=> runApp(MyApp());//one line functions or methods
+  //=> runApp(MyApp());
   initializeDateFormatting().then((_) => runApp(MyApp()));
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Set portrait orientation
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.portraitUp,
+    ]);
+    // SystemChrome.setSystemUIOverlayStyle(style)
     return ChangeNotifierProvider(
       create: (_) => ThemeNotifier(),
       child: Consumer<ThemeNotifier>(
           builder: (BuildContext context, ThemeNotifier notifier, child) {
         return MaterialApp(
           title: 'Events',
-//      routes: ,
-//        debugShowCheckedModeBanner: false,
-//          debugShowMaterialGrid: false,
           theme: notifier.darkTheme ? dark : light,
-//routes: ,
           home: MyHomePage(),
         );
       }),
@@ -80,10 +83,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   double screenWidth;
 
   List<Color> dkMdMenu = [
-    Color(0xFF5d646e), //3f4754),
-    Color(0xFF464e5a), //2b3442),
-    Color(0xFF2f3845), //27303f),
-    // Color(0xFF232d3b)
+    Color(0xFF101722), //5d646e), //3f4754),
+    Color(0xFF131b27), //464e5a), //2b3442),
+    Color(0xFF151e2c), //2f3845), //27303f),
     Color(0xff182231)
   ];
   List<Color> lghtMdMenu = [
@@ -91,63 +93,26 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     Color(0xFF60a1ea), //61A4F1),
     Color(0xFF4c95e7), //478DE0),
     Color(0xFF398AE5),
-    // Colors.blueGrey.shade200,
-    // Colors.blueGrey.shade300,
-    // Colors.blueGrey.shade400,
-    // Colors.blueGrey.shade500,
   ];
   double endVal = 0.0;
   final _pageController = PageController(initialPage: 0, keepPage: true);
 
   @override
   void initState() {
-    super.initState();
     mainController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
-//resized?mainController.forward():mainController.reverse();
-
     dayEvents = {};
     selectedDayEvents = [];
     switchPage();
-    scaleController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
-    scaleAnimation =
-        Tween<double>(begin: 1, end: 0.65).animate(scaleController);
-    // Appbar();
-//    mainController = AnimationController(vsync: this, duration: duration,animationBehavior: AnimationBehavior.normal,)..forward();
-//mainAnimation=Tween(begin: 0.0, end: 16.0).animate(CurvedAnimation(parent: mainController, curve: Curves.easeIn, reverseCurve: Curves.easeOut))..addStatusListener(
-//        (AnimationStatus status) {
-////          if(status==AnimationStatus.completed){
-////            mainController.reverse();
-////          }
-////          else if(status==AnimationStatus.dismissed){
-////            mainController.forward();
-////          }
-//          switch (status) {
-//            case AnimationStatus.completed:
-//              mainController.reverse();
-//              break;
-//            case AnimationStatus.dismissed:
-//              mainController.forward();
-//              break;
-//            case AnimationStatus.forward:
-//              break;
-//            case AnimationStatus.reverse:
-//              break;
-//          }
-//
-//});
-//    animation = Tween(begin: 0, end: 1.0).animate(CurvedAnimation(parent: controller, curve: Interval(0.0, 0.5)));
-//    _retrieveCalendars();
+    super.initState();
   }
 
   @override
   void dispose() {
-    super.dispose();
-
     _pageController.dispose();
     mainController.dispose();
     scaleController.dispose();
+    super.dispose();
   }
 
   @override
@@ -162,9 +127,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       pageSnapping: true,
       children: <Widget>[
         body(context)
-        // MainBodyWidget(),
-//        viewDayEvents(context),
-//        ViewDayEvents(),
       ],
     );
     resized ? mainController.reverse() : mainController.forward();
@@ -188,25 +150,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             stops: <double>[0.1, 0.4, 0.7, 0.9],
           ),
         ),
-        child: SingleChildScrollView(
-          child: Stack(
-            children: <Widget>[
-              menu(context),
-              // Menu(),
-              AnimatedBuilder(
-                builder: (context, child) {
-                  return child;
-                },
-                animation: mainAnimation,
-                child: PositionedTransition(
-                    rect: mainAnimation,
-                    // child: ScaleTransition(
-                    //   scale: scaleAnimation,
-                    child: pageView),
-                // ),
-              ),
-            ],
-          ),
+        child: Stack(
+          children: <Widget>[
+            menu(context),
+            // Menu(),
+            PositionedTransition(rect: mainAnimation, child: pageView),
+          ],
         ),
       ),
     );
@@ -214,8 +163,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   Widget appbar(context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.symmetric(vertical: 15),
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -228,20 +180,19 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: IconButton(
-                    icon: Icon(IconData(0xe800, fontFamily: "appicons")),
+                    icon: Icon(const IconData(0xe800, fontFamily: "appicons")),
                     color: Colors.pink,
                     splashColor: Colors.blue,
                     hoverColor: Colors.green,
                     onPressed: () {
                       setState(() {
                         resized = !resized;
+                        if (resized == false) {
+                          scaleController.forward();
+                        } else if (resized == true) {
+                          scaleController.reverse();
+                        }
                       });
-                      // print();
-                      // setState(() {
-                      //   // if(resized)scaleController.forward();else scaleController.reverse();
-                      //
-                      //   // widget.isResized=widget.isResized=
-                      // });
                     }),
               ),
             ),
@@ -278,9 +229,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               }
               if (modalOpen == true) {
                 modalOpen = false;
-//                setState(() {
-//                  eTitleController.clear();
-//                });
               }
             },
           ),
@@ -291,7 +239,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   Widget menu(context) {
     return AnimatedOpacity(
-      /*          key: ValueKey(2), if menu is collapsed(resized) opacity is 0 otherwise it is 1*/
       opacity: resized ? 0 : 1,
       duration: Duration(seconds: 1),
       curve: Curves.easeIn,
@@ -314,7 +261,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               .width * 0.60,
           margin: EdgeInsets.only(bottom: 50.0, top: 80),
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
@@ -328,11 +274,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         backgroundImage:
                         AssetImage(
                           "images/jackson-david-7t7pFCjTmws-unsplash.jpg",),
-                        // child: Image.asset("images/jackson-david-7t7pFCjTmws-unsplash.jpg",alignment: Alignment.topCenter,
-                        //  fit: BoxFit.fill,gaplessPlayback: true, // placeholder: 'images/loading.gif',
-                        //   // image: 'images/jackson-david-7t7pFCjTmws-unsplash.jpg',
-                        // ),
-                        // child: Image.asset("assets/images/jackson-david-7t7pFCjTmws-unsplash.jpg",matchTextDirection: true,),
                         maxRadius: 30,
                         minRadius: 10,
                       ),
@@ -360,72 +301,17 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           .backgroundColor,
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
-                    // child: Divider()
                   ),
-                  flatButtonWidget(
-                      context, 0, "Year", MdiIcons.calendarBlankMultiple),
-                  flatButtonWidget(context, 1, "Month", MdiIcons.calendarMonth),
-                  flatButtonWidget(context, 2, "Day", Icons.calendar_today),
-                  flatButtonWidget(context, 3, "Search", Icons.search),
-//                   FlatButton.icon(
-//                     onPressed: () {
-//                       setState(() {
-//                         switchWidget = 1;
-//                       });
-//                     },
-//                     icon: Icon(MdiIcons.calendarMonth),
-//                     label: Text(
-//                     "Month",
-//                     style: switchWidget == 1
-//                         ?  Theme
-//                         .of(context)
-//                         .textTheme
-//                         .headline6.copyWith(fontWeight: FontWeight.w600,fontSize: 24)
-//                         : Theme
-//                         .of(context)
-//                         .textTheme
-//                         .headline6,
-//                   ),
-//                   ),
-//                   FlatButton.icon(
-//                     onPressed: () {
-//                       setState(() {
-//                         // switchWidget = 2;
-//                       });
-//                     },icon: Icon(Icons.calendar_today),label: Text(
-//                     "Day",
-//                     style: switchWidget == 2
-//                         ?  Theme
-//                         .of(context)
-//                         .textTheme
-//                         .headline6.copyWith(fontWeight: FontWeight.w600,fontSize: 24)
-//                         : Theme
-//                         .of(context)
-//                         .textTheme
-//                         .headline6,
-//                   ),
-// //                  color:Colors.amber ,
-//                   ),
-//                   FlatButton.icon(
-//                     onPressed: () {
-//                       setState(() {
-//                         // switchWidget = 2;
-//                       });
-//                     },icon: Icon(Icons.search,semanticLabel: "Calendar Search",),
-//                     label: Text(
-//                     "Search",
-//                     style: switchWidget == 3
-//                         ?  Theme
-//                         .of(context)
-//                         .textTheme
-//                         .headline6.copyWith(fontWeight: FontWeight.w600,fontSize: 24)
-//                           : Theme
-//                       .of(context)
-//                       .textTheme
-//                       .headline6,
-//                   ),
-// //                  color:Colors.amber ,
-//                   ),
+                  FlatButtonWidget(switchVal: 0,
+                      label: "Year",
+                      icon: MdiIcons.calendarBlankMultiple),
+                  FlatButtonWidget(switchVal: 1,
+                      label: "Month",
+                      icon: MdiIcons.calendarMonth),
+                  FlatButtonWidget(
+                      switchVal: 2, label: "Day", icon: Icons.calendar_today),
+                  FlatButtonWidget(
+                      switchVal: 3, label: "Search", icon: Icons.search),
                   Container(
                     width: double.infinity, height: 2,
                     margin: EdgeInsets.symmetric(vertical: 25, horizontal: 10),
@@ -441,7 +327,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
-                child: flatButtonWidget(context, 4, "Settings", Icons.settings),
+                child: FlatButtonWidget(
+                  switchVal: 4, label: "Settings", icon: Icons.settings,),
               ),
             ],
           ),
@@ -449,31 +336,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       ),
     );
   }
-
-  FlatButton flatButtonWidget(context, switchVal, label, icon) {
-    return FlatButton.icon(
-      onPressed: () {
-        setState(() {
-          switchWidget = switchVal;
-        });
-      },
-      // disabledTextColor: Theme.of(context).disabledColor.withOpacity(0.5),
-      label: Text(
-        label, textAlign: TextAlign.start,
-        style: switchWidget == switchVal
-            ? Theme
-            .of(context)
-            .textTheme
-            .headline6
-            .copyWith(fontWeight: FontWeight.w600, fontSize: 24)
-            : Theme
-            .of(context)
-            .textTheme
-            .headline6,
-      ), icon: Icon(icon),
-    );
-  }
-
 
   Widget body(context) {
     return
@@ -486,7 +348,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           child: Wrap(
             direction: Axis.horizontal,
             children: <Widget>[
-              // Appbar(onChanged: _handleTapboxChanged,isResized: _active,),
               appbar(context),
               AnimatedSwitcher(
                 transitionBuilder: (Widget child, Animation<double> animation) {
@@ -494,13 +355,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       begin: Offset(0.0, 1.0), end: Offset(0.0, 0.0))
                       .animate(animation);
                   return SlideTransition(
-                    position: offsetAnimation,
-                    child: child,
-                  );
+                      position: offsetAnimation,
+                      child: child);
                 },
                 switchInCurve: Curves.easeInOut,
                 switchOutCurve: Curves.easeInOut,
-                duration: Duration(seconds: 3),
+                duration: duration,
                 child: switchWidget == 1 ? MyBody() : switchPage(),
 //                  (() {
 //                    switchPage()
@@ -510,6 +370,53 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           ),
         ),
       );
+  }
+}
+
+//Flat button widget for the menu items
+class FlatButtonWidget extends StatefulWidget {
+
+  const FlatButtonWidget({
+    Key key,
+    @required this.switchVal,
+    @required this.label,
+    @required this.icon,
+  }) : super(key: key);
+
+  final int switchVal;
+  final String label;
+  final IconData icon;
+
+  @override
+  _FlatButtonWidgetState createState() => _FlatButtonWidgetState();
+}
+
+class _FlatButtonWidgetState extends State<FlatButtonWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return FlatButton.icon(
+      onPressed: () {
+        setState(() {
+          switchWidget = widget.switchVal;
+        });
+      },
+      label: Text(
+        widget.label, textAlign: TextAlign.start,
+        style: switchWidget == widget.switchVal
+            ? Theme
+            .of(context)
+            .textTheme
+            .headline6
+            .copyWith(fontWeight: FontWeight.w600, fontSize: 24)
+            : Theme
+            .of(context)
+            .textTheme
+            .headline6,
+      ), icon: Icon(widget.icon, color: Theme
+        .of(context)
+        .focusColor
+        .withOpacity(0.7),),
+    );
   }
 }
 

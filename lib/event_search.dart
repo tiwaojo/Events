@@ -1,5 +1,4 @@
 import 'package:events/globals.dart';
-import 'package:flutter/rendering.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class SearchEvents extends StatefulWidget {
@@ -10,14 +9,14 @@ class SearchEvents extends StatefulWidget {
 class _SearchEventsState extends State<SearchEvents> {
   @override
   void initState() {
-    super.initState();
     eSearchController = TextEditingController();
+    super.initState();
   }
 
   @override
   void dispose() {
-    super.dispose();
     eSearchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -31,7 +30,6 @@ class _SearchEventsState extends State<SearchEvents> {
               margin: EdgeInsets.only(top: 10, left: 15, right: 15),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-//              shape: BoxShape.circle,
                 color: Theme.of(context).primaryColorDark,
                 boxShadow: [
                   BoxShadow(
@@ -47,10 +45,9 @@ class _SearchEventsState extends State<SearchEvents> {
               ),
               child: TextFormField(
                 controller: eSearchController,
-                // maxLength: MediaQuery.of(context).size.width,
                 textDirection: TextDirection.ltr,
                 maxLines: 1,
-
+                autofocus: autofocus,
                 decoration: InputDecoration(
                   contentPadding:
                       EdgeInsets.only(left: 8, right: 8, top: 10, bottom: 10),

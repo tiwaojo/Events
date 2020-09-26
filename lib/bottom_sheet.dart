@@ -9,73 +9,31 @@ class ModalBottomSheet extends StatefulWidget {
   _ModalBottomSheetState createState() => _ModalBottomSheetState();
 }
 
-int maxLength = 0;
 
-int maxLines = 0;
 
 var _dayEvent = new NewEvent(null, null, null, null);
 
 class _ModalBottomSheetState extends State<ModalBottomSheet> {
   final _formKey = GlobalKey<FormState>();
-  TimeOfDay _timeOfDay = TimeOfDay.now();
-  TimeOfDay pickedTime = TimeOfDay.now();
 
-//  Future<TimeOfDay> selectTime(BuildContext context) async {
-//    pickedDate = await showTimePicker(
-//      context: context,
-//      initialTime: _timeOfDay,
-//      builder: (BuildContext context, Widget child) {
-//        return MediaQuery(
-//          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
-//
-//          child: child,
-//        );
-//      },
-//    );
-//    if (pickedDate != null && pickedDate != _timeOfDay) {
-//      setState(() {
-//        _timeOfDay = pickedDate;
-//        print(pickedDate);
-//      });
-//    }
-//  }
-  selectTime(BuildContext context, DateTime pickedDate) {
-    showTimePicker(
-      context: context,
-      initialTime: _timeOfDay,
-      builder: (BuildContext context, Widget child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
-          child: child,
-        );
-      },
-    ).then((value) {
-      if (value != null) {
-//                                pickedTime = value;
-        setState(() {
-          pickedDate = DateTime(pickedDate.year, pickedDate.month,
-              pickedDate.day, value.hour, value.minute);
-        });
-      }
-//      print("Picked Date: $pickedDate ");
-      return pickedDate;
-    });
-  }
+  TimeOfDay _timeOfDay = TimeOfDay.now();
+
+  int maxLength = 0;
+  int maxLines = 0;
 
   @override
   void initState() {
-    super.initState();
     eTitleController = TextEditingController();
     eDescrptionController = TextEditingController();
-//    initPrefs();
+    // saveEvent();
+    super.initState();
   }
-
 
   @override
   void dispose() {
-    super.dispose();
     eTitleController.dispose();
     eDescrptionController.dispose();
+    super.dispose();
   }
 
   @override
@@ -84,7 +42,6 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
       autovalidate: true,
       key: _formKey,
       child: Container(
-     // color: Theme.of(context).focusColor,
         margin: EdgeInsets.only(
           left: 10,
           right: 10,
@@ -117,10 +74,10 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text("Start", style: Theme
-                          .of(context)
-                          .textTheme
-                          .subtitle1,),
+                      Text(
+                        "Start",
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
@@ -130,7 +87,7 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                                 context: context,
                                 initialDate:
 //                                startDate == null ?
-                                currentDate,
+                                    currentDate,
 //                                    : startDate,
                                 initialDatePickerMode: DatePickerMode.day,
                                 firstDate: DateTime(2018),
@@ -139,24 +96,31 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                                   return Theme(
                                       data: menuGradient
                                           ? ThemeData.dark().copyWith(
-                                          primaryColor: Colors.amber,
-                                          //OK/Cancel button text color
-                                          //Head background
-                                          splashColor: Color(0xff182231),
-                                          accentColor: const Color(
-                                              0xFF4A5BF6) //selection color
-                                        //dialogBackgroundColor: Colors.white,//Background color
-                                      )
+                                              colorScheme: ColorScheme.dark(
+                                                primary: Theme.of(context)
+                                                    .primaryColorDark,
+                                                onPrimary: Theme.of(context)
+                                                    .focusColor,
+                                                surface: Theme.of(context)
+                                                    .backgroundColor,
+                                                onSurface: Theme.of(context)
+                                                    .focusColor,
+                                              ),
+                                              dialogBackgroundColor:
+                                                  Color(0xFF262E3E))
                                           : ThemeData.light().copyWith(
-                                        colorScheme: ColorScheme.dark(
-                                          primary: Colors.deepPurple,
-                                          onPrimary: Colors.white,
-                                          surface: Colors.pink,
-                                          onSurface: Colors.yellow,
-                                        ),
-                                        dialogBackgroundColor:
-                                        Colors.blue[900],
-                                      ),
+                                              colorScheme: ColorScheme.light(
+                                                primary: Theme.of(context)
+                                                    .primaryColorLight,
+                                                onPrimary: Theme.of(context)
+                                                    .focusColor,
+                                                surface: Theme.of(context)
+                                                    .backgroundColor,
+                                                onSurface: Theme.of(context)
+                                                    .focusColor,
+                                              ),
+                                              dialogBackgroundColor:
+                                                  Color(0xFF262E3E)),
                                       child: child);
                                 },
                               ).then((value) {
@@ -164,12 +128,7 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                                   if (value != null) {
                                     startDate = value;
                                     endDate = value;
-//                                        .add(
-//                                      Duration(days: 1),
-//                                    );
                                   }
-
-//                                startDate.difference(endDate).inDays>=1?startDate.subtract(Duration(days: 1)):endDate=startDate;
                                 });
                               });
                             },
@@ -198,7 +157,6 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                                 },
                               ).then((value) {
                                 if (value != null) {
-//                                pickedTime = value;
                                   setState(() {
                                     startDate = DateTime(
                                         startDate.year,
@@ -207,7 +165,6 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                                         value.hour,
                                         value.minute);
                                   });
-//                                  print(startDate);
                                 }
                               });
                             },
@@ -252,13 +209,51 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                                 initialDatePickerMode: DatePickerMode.day,
                                 firstDate: DateTime(2018),
                                 lastDate: DateTime(currentDate.year + 10),
+                                builder: (context, child) {
+                                  return Theme(
+                                      data: menuGradient
+                                          ? ThemeData.dark().copyWith(
+                                          colorScheme: ColorScheme.dark(
+                                            primary: Color(0xFF1C4572),
+                                            onPrimary: Theme
+                                                .of(context)
+                                                .focusColor,
+                                            surface: Theme
+                                                .of(context)
+                                                .primaryColor,
+                                            onSurface: Theme
+                                                .of(context)
+                                                .focusColor,
+                                          ),
+                                          dialogBackgroundColor:
+                                          Color(0xFF262E3E))
+                                          : ThemeData.light().copyWith(
+                                          colorScheme: ColorScheme.light(
+                                            primary: Theme
+                                                .of(context)
+                                                .primaryColorLight,
+                                            onPrimary: Theme
+                                                .of(context)
+                                                .focusColor,
+                                            surface: Theme
+                                                .of(context)
+                                                .backgroundColor,
+                                            onSurface: Theme
+                                                .of(context)
+                                                .focusColor,
+                                          ),
+                                          dialogBackgroundColor:
+                                          Color(0xFF262E3E)),
+                                      child: child);
+                                },
                               ).then((value) {
                                 setState(() {
                                   if (value != null) {
                                     endDate = value;
                                     if (startDate
                                         .difference(endDate)
-                                        .inDays > 1) {
+                                        .inDays >
+                                        1) {
                                       endDate = startDate.add(
                                         Duration(days: 1),
                                       );
@@ -272,8 +267,7 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                               endDate == null
                                   ? DateFormat("EEE., MMM d, yyyy")
                                   .format(
-                                currentDate
-                                    .add(
+                                currentDate.add(
                                   Duration(days: 1),
                                 ),
                               )
@@ -305,11 +299,8 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                                         value.hour,
                                         value.minute);
                                   });
-//                                  print(endDate);
                                 }
                               });
-
-//                              print(endDate);
                             },
                             icon: Icon(Icons.access_alarms),
                             label: Text(
@@ -343,16 +334,17 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                   color: Theme
                       .of(context)
                       .primaryColorLight,
-                  child: Center(child: Text("Save", style: Theme
-                      .of(context)
-                      .textTheme
-                      .headline6)),
+                  child: Center(
+                      child: Text("Save",
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .headline6)),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  onPressed: () async {
+                  onPressed: () {
 //                   TODO _formKey.currentState.validate/save
-//                    if (eTitleController.text.isEmpty) return;
                     if (endDate.isAfter(startDate) &&
                         eTitleController.text.isNotEmpty) {
                       saveEvent();
@@ -361,12 +353,11 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                         scaffoldKey.currentState.showSnackBar(
                           SnackBar(
                             content: Text('Event Added'),
-                            duration: Duration(seconds: 10),
+                            duration: Duration(seconds: 2),
                           ),
                         );
                       });
-                    }
-                    else if (eTitleController.text.isEmpty) {
+                    } else if (eTitleController.text.isEmpty) {
                       Navigator.pop(context);
                       scaffoldKey.currentState.showSnackBar(
                         SnackBar(
@@ -374,8 +365,7 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                           duration: Duration(seconds: 3),
                         ),
                       );
-                    }
-                    else {
+                    } else {
                       Navigator.pop(context);
                       scaffoldKey.currentState.showSnackBar(
                         SnackBar(
@@ -386,16 +376,21 @@ class _ModalBottomSheetState extends State<ModalBottomSheet> {
                     }
                   },
                 ),
-                FlatButton(color: Theme
-                    .of(context)
-                    .primaryColorLight,
+                FlatButton(
+                  color: Theme
+                      .of(context)
+                      .primaryColorLight,
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Center(child: Text("Cancel", style: Theme
-                      .of(context)
-                      .textTheme
-                      .headline6,)),
+                  child: Center(
+                      child: Text(
+                        "Cancel",
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .headline6,
+                      )),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -417,10 +412,10 @@ class TitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(margin: EdgeInsets.only(top: 10, left: 15, right: 15),
+    return Container(
+      margin: EdgeInsets.only(top: 10, left: 15, right: 15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-//              shape: BoxShape.circle,
         color: Theme
             .of(context)
             .primaryColorDark,
@@ -440,15 +435,9 @@ class TitleWidget extends StatelessWidget {
         controller: eTitleController,
         autovalidate: true,
         autocorrect: true,
-        autofocus: true,
-        // maxLength: 30,
-        // maxLengthEnforced: maxLength>29?false:true,
-        // expands: true,
-        // textInputAction: TextInputAction.continueAction,
-        //  maxLines: maxLength > 29 ? 0 : 1 ,
+        autofocus: autofocus,
         keyboardType: TextInputType.multiline,
         minLines: 1,
-        //Normal textInputField will be displayed
         maxLines: 3,
         enableSuggestions: true,
         textCapitalization: TextCapitalization.sentences,
@@ -459,9 +448,7 @@ class TitleWidget extends StatelessWidget {
           alignLabelWithHint: true,
           border: InputBorder.none,
         ),
-        // scrollPadding: EdgeInsets.all(10),
         cursorColor: Colors.pinkAccent,
-        // cursorRadius: Radius.circular(12),
         style: Theme
             .of(context)
             .textTheme
@@ -480,11 +467,9 @@ class DescriptionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // margin: EdgeInsets.only(top: 10,left: 15,right: 15),
       margin: EdgeInsets.only(top: 4, bottom: 4, left: 15, right: 15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-//              shape: BoxShape.circle,
         color: Theme
             .of(context)
             .primaryColorDark,
@@ -507,25 +492,16 @@ class DescriptionWidget extends StatelessWidget {
         keyboardAppearance: Brightness.dark,
         keyboardType: TextInputType.multiline,
         minLines: 2,
-        //Normal textInputField will be displayed
         maxLines: 4,
-        //maxLength>30?maxLength:maxLength+=1,
         textCapitalization: TextCapitalization.sentences,
         controller: eDescrptionController,
         cursorColor: Colors.pinkAccent,
-
         enableSuggestions: true,
-        // maxLength: 200,
-        // maxLengthEnforced: false,
         decoration: InputDecoration(
           hintText: "Description",
           border: InputBorder.none,
           contentPadding: EdgeInsets.fromLTRB(10, 5, 10, 5),
           alignLabelWithHint: true,
-          // isDense: true,
-          // fillColor: Colors.green,
-          // filled: true,isCollapsed: true
-          // suffixText: "What",
         ),
         style: Theme
             .of(context)
@@ -536,7 +512,6 @@ class DescriptionWidget extends StatelessWidget {
   }
 }
 
-
 void saveEvent() {
   _dayEvent.title = eTitleController.text;
   _dayEvent.startDate = startDate.toString();
@@ -544,147 +519,32 @@ void saveEvent() {
 
   if (eDescrptionController.text.isNotEmpty) {
     _dayEvent.description = eDescrptionController.text;
-  }
-  else {
+  } else {
     _dayEvent.description = "";
   }
 
-
-  //TODO write a recursive method that will reassign [calendarController.selectedDay] to the days within the startDate and the endDate
-//                        calendarController.setSelectedDay(DateTime(startDate.year,startDate.month,startDate.day,0,0),animate: false);
-  if (dayEvents[DateTime(
-      startDate.year, startDate.month, startDate.day, 0, 0)] != null) {
+  //TODO write a recursive method that will allow us to create events for a range of dates
+  if (dayEvents[
+  DateTime(startDate.year, startDate.month, startDate.day, 0, 0)] !=
+      null) {
     dayEvents[DateTime(startDate.year, startDate.month, startDate.day, 0, 0)]
         .add(_dayEvent.toJson());
     calendarController.visibleEvents;
-//                          selectedDayEvents.forEach((element) {var user = NewEvent.fromJson(element);
-//                            print(user.toJson());});
-    print("More than one event exists for this day");
+    // print("More than one event exists for this day");
   } else {
-    //TODO cannot have new event [_dayEvent] be saved to key [startDate]. It will override the previous value
-
-    dayEvents[DateTime(
-        startDate.year, startDate.month, startDate.day, 0, 0)] =
+    dayEvents[DateTime(startDate.year, startDate.month, startDate.day, 0, 0)] =
     [_dayEvent.toJson()];
-
-    print("An event has been added");
-//                          print(dayEvents.values.toList());
-//                          print(selectedDayEvents);
-
+    // print("An event has been added");
   }
 
-  eventPrefs.setString(
-      "events", json.encode(encodeMap(dayEvents)));
-//                      eventListKey.currentState.insertItem(selectedDayEvents.length+1);
+  eventPrefs.setString("events", json.encode(encodeMap(dayEvents)));
 
   eTitleController.clear();
   eDescrptionController.clear();
-  orderedSelectedDay();
 }
 
-getStartTime(var a) {
-  NewEvent user = NewEvent.fromJson(a);
-  var startTime = DateFormat.jm().format(DateTime.parse(user.startDate));
-  return startTime;
-}
-
-//                  print(dayEvents);
-////                  dayEvents=[(dayEvents.keys,dayEvents)];
-//                  print(selectedDayEvents);
-//                    String tartDate = jsonEncode((_dayEvent));
-//                    String tartDate=jsonEncode(encodeMap((dayEvents)));
-//                    print(tartDate);
-//                    for (var key in dayEvents.keys) {
-//                      print(key);
-//                    }
-//                    print("\n");
-//                    for (var value in dayEvents.values) {
-//                      print(value);
-//                    }
-//
-//                    dayEvents.forEach((key, value) {
-//                      print("key: $key and value: $value");
-//                      value.forEach((element) {element=someEventList;print(someEventList);});
-//                    });
-/*Future.delayed(Duration(seconds;3)).then((value){progressDialog.update/show/hide();});*/
-
-//assert is to tell the program that to make sure the variable has the correct parameters//                              assert(
-//                              startDate.hour == pickedDate.hour);
-//                              assert(startDate.minute ==
-//                                  pickedDate.minute);
-
-//                              DateTime(startDate.hour) =pickedDate.hour;
-//                            assert(startDate.hour==pickedDate.hour);
-//                            assert(startDate.minute==pickedDate.minute);
-//                            assert(DateFormat("H:m").format(startDate)==pickedDate.format(context));
-//=pickedDate.hour;
-//                              startDate.
-//                            showTimePicker(
-//                              context: context,
-//                              initialTime: TimeOfDay.fromDateTime(
-//                                  DateTime.parse(
-//                                      startDate.toIso8601String(),
-//                                  ),
-//                              ),
-//                            );
-//                          selectTime(context);
-//                    if (startDate.difference(endDate).inDays >
-//                        1) {
-//                      setState(() {
-//
-//                      });
-//                    }
-//                              then((value) {
-//                                if (value != null) {
-//                                  pickedTime = value;
-//
-//                                  endDate = DateTime(
-//                                      endDate.year,
-//                                      endDate.month,
-//                                      endDate.day,
-//                                      pickedTime.hour,
-//                                      pickedTime.minute);
-//                                }
-//                              });
-//assert is to tell the program that to make sure the variable has the correct parameters
-//                              assert(
-//                              startDate.hour == pickedDate.hour);
-//                              assert(startDate.minute ==
-//                                  pickedDate.minute);
-
-//                            TimeOfDay(hour: pickedDate.hour,minute: pickedDate.minute).toString()+pickedDate.period.toString().substring(10,12),
-//                            pickedDate.toString().substring(10, 15) +
-//                                pickedDate.period.toString().substring(10, 12),
-
-//  InputDatePickerFormField(firstDate: DateTime(2018), lastDate: DateTime(2021),)
-
-//  onPressed: () {
-//                // Validate returns true if the form is valid, or false
-//                // otherwise.
-//                if (_formKey.currentState.validate()) {
-//                  // If the form is valid, display a Snackbar.
-//                  Scaffold.of(context)
-//                      .showSnackBar(SnackBar(content: Text('Processing Data')));
-//                }
-//              },
-//                            showTimePicker(
-//                              builder: (context, child) {
-//                                return MediaQuery(
-//                                  data: MediaQuery.of(context).copyWith(
-//                                    alwaysUse24HourFormat: false,
-//                                    physicalDepth: 10,
-//                                  ),
-//                                  child: child,
-//                                );
-//                              },
-//                              context: context,
-//                              initialTime: TimeOfDay.fromDateTime(
-//                                DateTime(
-//                                  DateTime.now().year,
-//                                  DateTime.now().month,
-//                                  DateTime.now().day + 1,
-//                                  DateTime.now().hour,
-//                                  DateTime.now().minute,
-//                                ),
-//                              ),
-//                            );
+// getStartTime(var a) {
+//   NewEvent user = NewEvent.fromJson(a);
+//   var startTime = DateFormat.jm().format(DateTime.parse(user.startDate));
+//   return startTime;
+// }

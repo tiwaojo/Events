@@ -23,8 +23,11 @@ class _SettingsState extends State<Settings> {
             return SwitchListTile(
               value: notifier.darkTheme,
               title: Text(
-                notifier.darkTheme ? "DarkTheme" : "Light Theme",
-                style: Theme.of(context).textTheme.headline5,
+                notifier.darkTheme ? "Dark Theme" : "Light Theme",
+                style: Theme.of(context)
+                    .textTheme
+                    .headline5
+                    .copyWith(color: Theme.of(context).focusColor),
               ),
               onChanged: (bool value) {
                 notifier.toggleTheme();
@@ -37,7 +40,18 @@ class _SettingsState extends State<Settings> {
                 });
               },
             );
-          })
+          }),
+          SwitchListTile(value: autofocus, onChanged: (value) {
+            setState(() {
+              autofocus = !autofocus;
+            });
+          }, title: Text("AutoFocus TextField", style: Theme
+              .of(context)
+              .textTheme
+              .headline5
+              .copyWith(color: Theme
+              .of(context)
+              .focusColor),),)
         ],
       ),
     );

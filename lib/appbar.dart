@@ -44,7 +44,8 @@ class _AppbarState extends State<Appbar> {
                 child: GestureDetector(
                   onTap: _handleTap,
                   child: IconButton(
-                      icon: Icon(IconData(0xe800, fontFamily: "appicons")),
+                      icon:
+                          Icon(const IconData(0xe800, fontFamily: "appicons")),
                       color: Colors.pink,
                       splashColor: Colors.blue,
                       hoverColor: Colors.green,
