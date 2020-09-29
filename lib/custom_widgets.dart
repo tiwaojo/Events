@@ -10,4 +10,5 @@ export 'event_cards.dart';
 export 'event_search.dart';
 export 'menu.dart';
 export 'settings.dart';
+export 'splash_screen.dart';
 export 'themes.dart';

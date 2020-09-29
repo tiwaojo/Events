@@ -4,6 +4,7 @@ class DisplayNoEventsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      // height: MediaQuery.of(context).size.height,
       margin: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
       child: Text.rich(
         TextSpan(

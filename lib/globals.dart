@@ -22,7 +22,8 @@ AnimationController opacityController,
     mainController,
     bodyController,
     scaleController,
-    rotateController;
+    rotateController,
+    splashController;
 
 //DateTime and Calendar variables
 TableCalendar tableCalendar;

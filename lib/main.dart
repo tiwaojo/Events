@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           title: 'Events',
           theme: notifier.darkTheme ? dark : light,
-          home: MyHomePage(),
+          home: EventsSplashScreen(),
         );
       }),
     );
@@ -296,29 +296,20 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     height: 2,
                     margin: EdgeInsets.symmetric(vertical: 25, horizontal: 10),
                     decoration: BoxDecoration(
-                      color: Theme
-                          .of(context)
-                          .backgroundColor,
+                      color: Theme.of(context).backgroundColor,
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                   ),
-                  FlatButtonWidget(switchVal: 0,
-                      label: "Year",
-                      icon: MdiIcons.calendarBlankMultiple),
-                  FlatButtonWidget(switchVal: 1,
-                      label: "Month",
-                      icon: MdiIcons.calendarMonth),
-                  FlatButtonWidget(
-                      switchVal: 2, label: "Day", icon: Icons.calendar_today),
-                  FlatButtonWidget(
-                      switchVal: 3, label: "Search", icon: Icons.search),
+                  flatButtonWidget(
+                      context, 0, "Year", MdiIcons.calendarBlankMultiple),
+                  flatButtonWidget(context, 1, "Month", MdiIcons.calendarMonth),
+                  flatButtonWidget(context, 2, "Day", Icons.calendar_today),
+                  flatButtonWidget(context, 3, "Search", Icons.search),
                   Container(
                     width: double.infinity, height: 2,
                     margin: EdgeInsets.symmetric(vertical: 25, horizontal: 10),
                     decoration: BoxDecoration(
-                      color: Theme
-                          .of(context)
-                          .backgroundColor,
+                      color: Theme.of(context).backgroundColor,
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     // child: Divider()
@@ -327,13 +318,37 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
-                child: FlatButtonWidget(
-                  switchVal: 4, label: "Settings", icon: Icons.settings,),
+                child: flatButtonWidget(context,
+                  4, "Settings", Icons.settings,),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  FlatButton flatButtonWidget(context, switchVal, label, icon) {
+    return FlatButton.icon(
+      onPressed: () {
+        setState(() {
+          switchWidget = switchVal;
+        });
+      },
+      // disabledTextColor: Theme.of(context).disabledColor.withOpacity(0.5),
+      label: Text(
+        label, textAlign: TextAlign.start,
+        style: switchWidget == switchVal
+            ? Theme
+            .of(context)
+            .textTheme
+            .headline6
+            .copyWith(fontWeight: FontWeight.w600, fontSize: 24)
+            : Theme
+            .of(context)
+            .textTheme
+            .headline6,
+      ), icon: Icon(icon),
     );
   }
 
@@ -372,175 +387,3 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       );
   }
 }
-
-//Flat button widget for the menu items
-class FlatButtonWidget extends StatefulWidget {
-
-  const FlatButtonWidget({
-    Key key,
-    @required this.switchVal,
-    @required this.label,
-    @required this.icon,
-  }) : super(key: key);
-
-  final int switchVal;
-  final String label;
-  final IconData icon;
-
-  @override
-  _FlatButtonWidgetState createState() => _FlatButtonWidgetState();
-}
-
-class _FlatButtonWidgetState extends State<FlatButtonWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return FlatButton.icon(
-      onPressed: () {
-        setState(() {
-          switchWidget = widget.switchVal;
-        });
-      },
-      label: Text(
-        widget.label, textAlign: TextAlign.start,
-        style: switchWidget == widget.switchVal
-            ? Theme
-            .of(context)
-            .textTheme
-            .headline6
-            .copyWith(fontWeight: FontWeight.w600, fontSize: 24)
-            : Theme
-            .of(context)
-            .textTheme
-            .headline6,
-      ), icon: Icon(widget.icon, color: Theme
-        .of(context)
-        .focusColor
-        .withOpacity(0.7),),
-    );
-  }
-}
-
-
-// class MainBodyWidget extends StatefulWidget {
-// //   MainBodyWidget({Key key,this.resize}):super(key:key);
-// // final bool resize;
-//   @override
-//   _MainBodyWidgetState createState() => _MainBodyWidgetState();
-// }
-//
-// class _MainBodyWidgetState extends State<MainBodyWidget> {
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return ClipRRect(
-//       borderRadius: BorderRadius.circular(resized ? 0 : 16),
-//       child: Container(
-//         color: Theme
-//             .of(context)
-//             .primaryColor,
-//         child: Wrap(
-//           direction: Axis.horizontal,
-//           children: <Widget>[
-//             // Appbar(isResized: resized,key: ValueKey(1),),
-//             Appbar(onChanged: _handleTapboxChanged,isResized: _active,),
-//             AnimatedSwitcher(
-//               transitionBuilder: (Widget child, Animation<double> animation) {
-//                 final offsetAnimation = Tween<Offset>(
-//                     begin: Offset(0.0, 1.0), end: Offset(0.0, 0.0))
-//                     .animate(animation);
-//                 return SlideTransition(
-//                   position: offsetAnimation,
-//                   child: child,
-//                 );
-//               },
-//               switchInCurve: Curves.easeInOut,
-//               switchOutCurve: Curves.easeInOut,
-//               duration: Duration(seconds: 3),
-//               child: switchWidget == 1 ? MyBody() : switchPage(),
-// //                  (() {
-// //                    switchPage()
-// //                  }()),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-//
-// //   Container appbar(context){
-// //     return Container(
-// //       margin: EdgeInsets.symmetric(vertical: 10),
-// //       width: MediaQuery
-// //           .of(context)
-// //           .size
-// //           .width,
-// //       child: Row(
-// //         crossAxisAlignment: CrossAxisAlignment.center,
-// //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-// //         children: <Widget>[
-// //           Transform(
-// //             transform: Matrix4.rotationX(pi),
-// //             alignment: Alignment.center,
-// //             child: Transform.rotate(
-// //               angle: pi / 2,
-// //               child: Padding(
-// //                 padding: const EdgeInsets.all(8.0),
-// //                 child: IconButton(
-// //                     icon: Icon(IconData(0xe800, fontFamily: "appicons")),
-// //                     color: Colors.pink,
-// //                     splashColor: Colors.blue,
-// //                     hoverColor: Colors.green,
-// //                     onPressed: () {
-// //                       setState(() {
-// //                         // if(resized)scaleController.forward();else scaleController.reverse();
-// //                         resized = !resized;
-// //                         print(resized);
-// //                         // scaffoldKey.currentContext.widget;
-// //                         // MainBodyWidget();
-// //                       });
-// //                     }),
-// //               ),
-// //             ),
-// //           ),
-// //           IconButton(
-// //             icon: Icon(Icons.add),
-// //             color: Colors.pink,
-// //             iconSize: 30,
-// //             onPressed: () {
-// //               if (modalOpen == false) {
-// //                 modalOpen = true;
-// //                 setState(() {
-// //                   showModalBottomSheet(
-// //                     context: context,
-// //                     builder: (context) {
-// //                       return SingleChildScrollView(
-// //                         child: ModalBottomSheet(),
-// //                       );
-// //                     },
-// //                     backgroundColor: Theme.of(context).disabledColor,
-// //                     enableDrag: true,
-// //                     shape: RoundedRectangleBorder(
-// //                       borderRadius: BorderRadius.vertical(
-// //                         top: Radius.circular(25.0),
-// //                       ),
-// //                     ),
-// //                     isScrollControlled: true,
-// //                     useRootNavigator: true,
-// //                     isDismissible: true,
-// //                   );
-// //                 });
-// //               }
-// //               if (modalOpen == true) {
-// //                 modalOpen = false;
-// // //                setState(() {
-// // //                  eTitleController.clear();
-// // //                });
-// //               }
-// //             },
-// //           ),
-// //         ],
-// //       ),
-// //     );
-// //   }
-// }
-

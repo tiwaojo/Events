@@ -77,22 +77,19 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
       availableCalendarFormats: {CalendarFormat.month: 'Month'},
       formatAnimation: FormatAnimation.slide,
       initialSelectedDay: currentDate,
-      headerVisible: false,
+      headerVisible: true,
       onHeaderTapped: (focusedDay) {
-
+        setState(() {
+          currentDate = DateTime.now();
+          calendarController.setSelectedDay(currentDate);
+        });
       },
       calendarStyle: CalendarStyle(
-        weekdayStyle: Theme
-            .of(context)
+        weekdayStyle: Theme.of(context)
             .textTheme
             .subtitle2
-            .copyWith(color: Theme
-            .of(context)
-            .accentColor),
-        weekendStyle: Theme
-            .of(context)
-            .textTheme
-            .subtitle2,
+            .copyWith(color: Theme.of(context).accentColor),
+        weekendStyle: Theme.of(context).textTheme.subtitle2,
         highlightSelected: true,
         canEventMarkersOverflow: true,
         markersPositionBottom: 1,
@@ -103,15 +100,32 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
         markersPositionLeft: 18,
         outsideDaysVisible: false,
       ),
+      headerStyle: HeaderStyle(
+        formatButtonVisible: false,
+        rightChevronIcon: Icon(
+          Icons.chevron_right,
+          color: Theme.of(context).focusColor.withOpacity(0.7),
+        ),
+        leftChevronIcon: Icon(
+          Icons.chevron_left,
+          color: Theme.of(context).focusColor.withOpacity(0.7),
+        ),
+        titleTextStyle: Theme.of(context)
+            .textTheme
+            .headline4
+            .copyWith(fontWeight: FontWeight.w800),
+        titleTextBuilder: (date, locale) {
+          currentDate = date;
+          return DateFormat.MMMM().format(date).toString();
+        },
+        headerPadding: EdgeInsets.zero,
+        headerMargin: EdgeInsets.only(bottom: 5),
+      ),
       daysOfWeekStyle: DaysOfWeekStyle(
           dowTextBuilder: (date, locale) {
             return DateFormat.E(locale).format(date)[0];
           },
-          weekdayStyle: Theme
-              .of(context)
-              .textTheme
-              .subtitle1
-              .copyWith(
+          weekdayStyle: Theme.of(context).textTheme.subtitle1.copyWith(
               color: Color(0xFFD89BAA).withOpacity(0.8), fontSize: 14),
           weekendStyle: Theme
               .of(context)
@@ -189,11 +203,10 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
         height: MediaQuery
             .of(context)
             .size
-            .height -
-            (MediaQuery
-                .of(context)
-                .size
-                .height * 0.13125),
+            .height - (MediaQuery
+            .of(context)
+            .size
+            .height * 0.13125),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
@@ -247,6 +260,45 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
                               lastDate: DateTime.now().add(
                                   Duration(days: 365 * 10)),
                               currentDate: calendarController.focusedDay,
+                              builder: (context, child) {
+                                return Theme(
+                                    data: menuGradient
+                                        ? ThemeData.dark().copyWith(
+                                        colorScheme: ColorScheme.dark(
+                                          primary: Theme
+                                              .of(context)
+                                              .primaryColorDark,
+                                          onPrimary: Theme
+                                              .of(context)
+                                              .focusColor,
+                                          surface: Theme
+                                              .of(context)
+                                              .backgroundColor,
+                                          onSurface: Theme
+                                              .of(context)
+                                              .focusColor,
+                                        ),
+                                        dialogBackgroundColor:
+                                        Color(0xFF262E3E))
+                                        : ThemeData.light().copyWith(
+                                        colorScheme: ColorScheme.light(
+                                          primary: Theme
+                                              .of(context)
+                                              .primaryColorLight,
+                                          onPrimary: Theme
+                                              .of(context)
+                                              .focusColor,
+                                          surface: Theme
+                                              .of(context)
+                                              .backgroundColor,
+                                          onSurface: Theme
+                                              .of(context)
+                                              .focusColor,
+                                        ),
+                                        dialogBackgroundColor:
+                                        Color(0xFF262E3E)),
+                                    child: child);
+                              },
                             )
                               ..then((value) {
                                 setState(() {
@@ -261,8 +313,10 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
                         },
                         child: Container(
                           alignment: Alignment.centerLeft,
-                          margin: EdgeInsets.symmetric(horizontal: 10,),
-                          child: Text(DateFormat.y()
+                          margin: EdgeInsets.symmetric(horizontal: 25,),
+                          child:
+
+                          Text(DateFormat.y()
                               .format(currentDate)
                               .toString(),
                             style: Theme
@@ -272,27 +326,7 @@ class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
                                 .copyWith(fontWeight: FontWeight.w300),),
                         ),
                       ),
-                      GestureDetector(
-                        onLongPress: () {
-                          setState(() {
-                            calendarController.setFocusedDay(DateTime.now());
-                            currentDate = DateTime.now();
-                          });
-                        },
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          margin: EdgeInsets.symmetric(
-                              horizontal: 25, vertical: 5),
-                          child: Text(DateFormat.MMMM()
-                              .format(currentDate)
-                              .toString(),
-                            style: Theme
-                                .of(context)
-                                .textTheme
-                                .headline4
-                                .copyWith(fontWeight: FontWeight.w800),),
-                        ),
-                      ),
+
                       GestureDetector(
                           behavior: HitTestBehavior.deferToChild,
                           dragStartBehavior: DragStartBehavior.down,

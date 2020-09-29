@@ -35,8 +35,8 @@ class _YearState extends State<Year> {
                     color: Color(0xFFFF0080),
                     shadows: <Shadow>[
                       Shadow(
-                        offset: Offset(20.0, 20.0),
-                        blurRadius: 10.0,
+                        offset: Offset(10.0, 12.0),
+                        blurRadius: 3.5,
                         color: Colors.black54,
                       ),
                     ],
@@ -52,8 +52,8 @@ class _YearState extends State<Year> {
                     color: Color(0xFFFF0080),
                     shadows: <Shadow>[
                       Shadow(
-                        offset: Offset(20.0, 20.0),
-                        blurRadius: 10.0,
+                        offset: Offset(10.0, 12.0),
+                        blurRadius: 3.5,
                         color: Colors.black54,
                       ),
                     ],
@@ -68,8 +68,8 @@ class _YearState extends State<Year> {
                     fontSize: 50,
                     shadows: <Shadow>[
                       Shadow(
-                        offset: Offset(10.0, 12.0),
-                        blurRadius: 3.5,
+                        offset: Offset(20.0, 20.0),
+                        blurRadius: 10,
                         color: Colors.black54,
                       ),
                     ],

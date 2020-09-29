@@ -15,7 +15,9 @@ class _ViewDayEventsState extends State<ViewDayEvents> {
         switchInCurve: Curves.easeInOut,
         switchOutCurve: Curves.easeInOut,
         child: selectedDayEvents.isEmpty
-            ? DisplayNoEventsWidget()
+            ? Container(
+                height: MediaQuery.of(context).size.height,
+                child: DisplayNoEventsWidget())
             : Container(
                 foregroundDecoration: BoxDecoration(
                   gradient: LinearGradient(
