@@ -11,7 +11,8 @@ With the InVision Prototype we
 
 video: https://youtu.be/cQzewvXv8wY
 
-<iframe width="1903" height="789" src="https://www.youtube.com/embed/cQzewvXv8wY" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+[![Events InVision Prototype](Misc/Invision_Prototype.gif)](https://youtu.be/cQzewvXv8wY)
 
   
 A few resources to get you started if this is your first Flutter project:  
