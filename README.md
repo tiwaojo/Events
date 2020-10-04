@@ -12,7 +12,7 @@ With the InVision Prototype we
 video: https://youtu.be/cQzewvXv8wY
 
 
-[![Events InVision Prototype](Misc/Invision_Prototype.gif)](https://youtu.be/cQzewvXv8wY)
+[![Events InVision Prototype](https://github.com/tiwaojo/Events/blob/master/Misc/InVision%20Prototype.gif)](https://youtu.be/cQzewvXv8wY)
 
   
 A few resources to get you started if this is your first Flutter project:  
