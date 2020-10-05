@@ -1,6 +1,6 @@
 
-# events  
- A mobile calendar application that allows the user to create and save their events locally on their android device. The application prototype was designed in Invision Studios and developed with Flutter and Dart.
+# events
+ A mobile calendar application that allows the user to create and save their events locally on their android device. The application prototype was designed in Invision Studios and developed with Flutter and Dart. [Click here](https://github.com/tiwaojo/Events/blob/master/Misc/Events.apk) to download the [**Events**] `.apk` file.
 
 
   
@@ -27,8 +27,13 @@ Users are privilidged to enjoy the features and animations that will contribute 
 - Users can add and events while being able to transition between widgets and pages pleasantly.
   - [Adding and Saving Events](https://youtu.be/GXyP6WZUnZM)
 - Transition between Dark and Light theme seamlessly
-  - [Adding and Saving Events](https://github.com/tiwaojo/Events/blob/master/Misc/Dark_Light.png)
-
+  - [Dark and Light Theme](https://youtu.be/YIJGi2jkw-A)
+- Smooth Transitions
+  - [Smooth Transitions](https://youtu.be/I9afsC7OaQ8)
+- Input Validation
+  - [Input Validation](https://youtu.be/6MSoU9T-UT8)
+- And Many more...
+  - [More Features and Functions](https://youtu.be/epSfMghYLvc)
 
 ## Resources
 
