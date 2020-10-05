@@ -19,9 +19,15 @@ Events used several packages such as **table_calendar, intl, & shared_prefrences
 
 ## Android Studio
 
-Android Studio provided tools that aided in learning and building **Events** as fast and efficiently as possible.
+Android Studio provided tools that aided in learning and building **Events** as fast and efficiently as possible. It provided tools such as [**Rebuild Widget Stats**](https://github.com/tiwaojo/Events/blob/master/Misc/Rebuild%20Widgets.png), and  [**Darts DevTools Flame Chart**](https://github.com/tiwaojo/Events/blob/master/Misc/Flame%20Chart.png).
 
+## Features and Functions
 
+Users are privilidged to enjoy the features and animations that will contribute to their experience with the application. 
+- Users can add and events while being able to transition between widgets and pages pleasantly.
+  - [Adding and Saving Events](https://youtu.be/GXyP6WZUnZM)
+- Transition between Dark and Light theme seamlessly
+  - [Adding and Saving Events](https://github.com/tiwaojo/Events/blob/master/Misc/Dark_Light.png)
 
 
 ## Resources
