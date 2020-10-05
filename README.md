@@ -1,14 +1,13 @@
 
 # events
- A mobile calendar application that allows the user to create and save their events locally on their android device. The application prototype was designed in Invision Studios and developed with Flutter and Dart. [Click here](https://github.com/tiwaojo/Events/blob/master/Misc/Events.apk) to download the [**Events**] `.apk` file.
-
+ A mobile calendar application that allows the user to create and save their events locally on their android device. The application prototype was designed in Invision Studios and developed with Flutter and Dart. [Click here](https://github.com/tiwaojo/Events/blob/master/Misc/Events.apk) to download `.apk` file.
 
   
 ## InVision Prototype 
   
 With the InVision Prototype, I was able to visualize the possible outcome of my app. A UI implementation i could strive towards. The app was initially called **Tasks**. This remained till i had to rebuild the project from scratch due to compromised files. The new project would be refactored as ***Events***. Below is a recording of the prototype.
 
-[![Events InVision Prototype](https://github.com/tiwaojo/Events/blob/master/Misc/InVision%20Prototype.gif)](https://youtu.be/cQzewvXv8wY)
+[Events InVision Prototype](https://youtu.be/cQzewvXv8wY)
 
 
 ## Flutter and Dart
@@ -19,7 +18,7 @@ Events used several packages such as **table_calendar, intl, & shared_prefrences
 
 ## Android Studio
 
-Android Studio provided tools that aided in learning and building **Events** as fast and efficiently as possible. It provided tools such as [**Rebuild Widget Stats**](https://github.com/tiwaojo/Events/blob/master/Misc/Rebuild%20Widgets.png), and  [**Darts DevTools Flame Chart**](https://github.com/tiwaojo/Events/blob/master/Misc/Flame%20Chart.png).
+Android Studio provided tools that aided in learning and building **Events** as fast and efficiently as possible. It provided tools such as [**Rebuild Widget Stats**](https://raw.githubusercontent.com/tiwaojo/Events/master/Misc/Rebuild%20Stats.png), and  [**Darts DevTools Flame Chart**](https://raw.githubusercontent.com/tiwaojo/Events/master/Misc/Flame%20Chart.png). Events was debugged on my old Samsung Galaxy S4 and profiled on the Galaxy S9. The application performed as expected on both devices due to the unmigrated dart packages. The application will work an all android APIs 5 and above.
 
 ## Features and Functions
 
