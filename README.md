@@ -8,6 +8,7 @@
 With the InVision Prototype, I was able to visualize the possible outcome of my app. A UI implementation i could strive towards. The app was initially called **Tasks**. This remained till i had to rebuild the project from scratch due to compromised files. The new project would be refactored as ***Events***. Below is a recording of the prototype.
 
 [Events InVision Prototype (Demo)](https://youtu.be/cQzewvXv8wY)
+
 [Events InVision Prototype (Artboard Series)](https://max681131.invisionapp.com/prototype/Calendar-ck9iwmqrr000sta011p1ksugq)
 
 
